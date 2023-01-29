@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "./footer";
 import Header from "./header";
+import TinyHeader from "./tinyHeader";
 
 interface ILayoutProps {
   children: React.ReactNode;
@@ -8,11 +9,14 @@ interface ILayoutProps {
 
 const Layout = ({ children }: ILayoutProps) => {
   return (
-    <>
+    <div className="relative min-h-screen pb-40">
       <Header />
-      {children}
+      <TinyHeader />
+      <div className="px-4">
+        <div className="mx-auto max-w-[750px]">{children}</div>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
