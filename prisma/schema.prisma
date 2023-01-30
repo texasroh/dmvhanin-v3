@@ -9,3 +9,39 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model BusinessCategory {
+  id                    Int                   @id @default(autoincrement())
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  name                  String                @db.VarChar(50)
+  businessSubcategories BusinessSubcategory[]
+}
+
+model BusinessSubcategory {
+  id                 Int              @id @default(autoincrement())
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  name               String           @db.VarChar(50)
+  businessCategory   BusinessCategory @relation(fields: [businessCategoryId], references: [id])
+  businessCategoryId Int
+  businesses         Business[]
+}
+
+model BusinessImage {
+  id         Int      @id @default(autoincrement())
+  url        String
+  business   Business @relation(fields: [businessId], references: [id])
+  businessId Int
+}
+
+model Business {
+  id                    Int                 @id @default(autoincrement())
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  businessSubcategory   BusinessSubcategory @relation(fields: [businessSubcategoryId], references: [id])
+  businessSubcategoryId Int
+  title                 String              @db.VarChar(100)
+  description           String
+  businessImages        BusinessImage[]
+}
