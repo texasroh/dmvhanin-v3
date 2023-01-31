@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model BusinessCategory {
@@ -15,6 +16,7 @@ model BusinessCategory {
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
   name                  String                @db.VarChar(50)
+  key                   String                @unique @db.VarChar(20)
   businessSubcategories BusinessSubcategory[]
 }
 
@@ -33,6 +35,9 @@ model BusinessImage {
   url        String
   business   Business @relation(fields: [businessId], references: [id])
   businessId Int
+  sort       Int
+
+  @@unique([businessId, sort])
 }
 
 model Business {
@@ -41,7 +46,20 @@ model Business {
   updatedAt             DateTime            @updatedAt
   businessSubcategory   BusinessSubcategory @relation(fields: [businessSubcategoryId], references: [id])
   businessSubcategoryId Int
-  title                 String              @db.VarChar(100)
-  description           String
   businessImages        BusinessImage[]
+  titleKor              String              @db.VarChar(100)
+  titleEng              String?             @db.VarChar(100)
+  description           String?
+  address               String?             @db.VarChar(100)
+  city                  String?             @db.VarChar(30)
+  state                 String?             @db.Char(2)
+  zipcode               String?             @db.Char(5)
+  googleMap             String?
+  phone                 String?             @db.VarChar(10)
+  email                 String?             @db.VarChar(100)
+  website               String?             @db.VarChar(100)
+  isActive              Boolean             @default(true)
+  totalRating           Int                 @default(0)
+  totalReview           Int                 @default(0)
+  avgRating             Decimal             @default(0) @db.Decimal(3, 2)
 }

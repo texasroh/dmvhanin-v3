@@ -21,11 +21,11 @@ const categories = [
   { key: "study", label: "학교 / 학원 / 튜터", imgSrc: study },
   { key: "beauty", label: "미용 / 뷰티", imgSrc: beauty },
   { key: "lawyer-cpa", label: "변호사 / 회계사", imgSrc: profession },
-  { key: "bank-insu", label: "은행 / 보험", imgSrc: claim },
+  { key: "bank-insurance", label: "은행 / 보험", imgSrc: claim },
   { key: "real-estate", label: "부동산", imgSrc: house },
   { key: "car", label: "자동차", imgSrc: car },
   { key: "travel", label: "여행 / 숙박 / 택시", imgSrc: travel },
-  { key: "amenity", label: "편의시설", imgSrc: amenities },
+  { key: "amenity", label: "생활편의", imgSrc: amenities },
   { key: "etc", label: "기타", imgSrc: more },
 ];
 
