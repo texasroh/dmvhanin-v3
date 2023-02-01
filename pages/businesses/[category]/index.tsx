@@ -2,6 +2,9 @@ import { useRouter } from "next/router";
 import client from "@/libs/server/client";
 import { NextPageContext } from "next";
 import { Business, BusinessImage } from "@prisma/client";
+import { categories } from "..";
+import { useEffect } from "react";
+import Image from "next/image";
 
 interface BusinessWithImages extends Business {
   businessImages: BusinessImage[];
@@ -13,12 +16,19 @@ interface ICategoryIndexProps {
 const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
   const router = useRouter();
   const { category } = router.query;
+  const categoryKor = categories.find((obj) => obj.key === category)?.label;
+  useEffect(() => {
+    if (!categoryKor) {
+      router.replace("/businesses");
+    }
+  }, [categoryKor]);
   return (
     <div>
-      <h1>{category}</h1>
-      <div>
+      <h1 className="text-lg font-medium">{categoryKor}</h1>
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
         {businesses.map((business) => (
-          <div>
+          <div className="border p-2">
+            <Image src={business.businessImages[0]?.url} alt={business.uuid} />
             {business.titleEng} {business.businessImages[0]?.url}
           </div>
         ))}
@@ -29,7 +39,9 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
 
 export default CategoryIndex;
 
-export const getServerSideProps = async ({ req, res }: NextPageContext) => {
+export const getServerSideProps = async ({
+  query: { category },
+}: NextPageContext) => {
   const businesses = await client.business.findMany({
     select: {
       titleKor: true,
@@ -55,6 +67,13 @@ export const getServerSideProps = async ({ req, res }: NextPageContext) => {
         totalReview: "desc",
       },
     ],
+    where: {
+      businessSubcategory: {
+        businessCategory: {
+          key: category + "",
+        },
+      },
+    },
     take: 20,
     skip: 0,
   });

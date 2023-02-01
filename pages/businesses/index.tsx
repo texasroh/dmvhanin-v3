@@ -14,7 +14,7 @@ import travel from "@/images/business-category/travel.png";
 import Image from "next/image";
 import Link from "next/link";
 
-const categories = [
+export const categories = [
   { key: "restaurant", label: "식당", imgSrc: restaurant },
   { key: "grocery", label: "식품점", imgSrc: grocery },
   { key: "medical", label: "병원 / 약국", imgSrc: hospital },
