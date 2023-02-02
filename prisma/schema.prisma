@@ -49,7 +49,7 @@ model Business {
   businessSubcategoryId Int
   businessImages        BusinessImage[]
   titleKor              String              @db.VarChar(100)
-  titleEng              String?             @db.VarChar(100)
+  titleEng              String              @db.VarChar(100)
   description           String?
   address               String?             @db.VarChar(100)
   city                  String?             @db.VarChar(30)

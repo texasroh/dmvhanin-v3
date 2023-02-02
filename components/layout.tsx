@@ -12,8 +12,8 @@ const Layout = ({ children }: ILayoutProps) => {
     <div className="relative min-h-screen pb-40">
       <Header />
       <TinyHeader />
-      <div className="px-4">
-        <div className="mx-auto max-w-[750px]">{children}</div>
+      <div className="px-2">
+        <div className="mx-auto max-w-[770px]">{children}</div>
       </div>
       <Footer />
     </div>

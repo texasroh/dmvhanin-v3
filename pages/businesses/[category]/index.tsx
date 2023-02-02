@@ -1,16 +1,20 @@
 import { useRouter } from "next/router";
 import client from "@/libs/server/client";
 import { NextPageContext } from "next";
-import { Business, BusinessImage } from "@prisma/client";
+import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
 import { categories } from "..";
 import { useEffect } from "react";
 import Image from "next/image";
+import CustomImage from "@/components/customImage";
+import { BsStar, BsChatText, BsDot } from "react-icons/bs";
+import Link from "next/link";
 
-interface BusinessWithImages extends Business {
+interface ExtendedBusiness extends Business {
   businessImages: BusinessImage[];
+  businessSubcategory: BusinessSubcategory;
 }
 interface ICategoryIndexProps {
-  businesses: BusinessWithImages[];
+  businesses: ExtendedBusiness[];
 }
 
 const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
@@ -25,11 +29,45 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
   return (
     <div>
       <h1 className="text-lg font-medium">{categoryKor}</h1>
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-        {businesses.map((business) => (
-          <div className="border p-2">
-            <Image src={business.businessImages[0]?.url} alt={business.uuid} />
-            {business.titleEng} {business.businessImages[0]?.url}
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {businesses.map((business, idx) => (
+          <div className="px-2" key={idx}>
+            <Link href={""}>
+              <div className="flex space-x-4 border-b py-4 px-4">
+                <CustomImage
+                  imgSrc={business.businessImages[0]?.url}
+                  alt={business.titleKor}
+                  circle
+                />
+                <div>
+                  <div className="flex items-end gap-2">
+                    <div>{business.titleEng}</div>
+                    <span className="text-sm font-medium text-gray-400">
+                      {business.city}
+                    </span>
+                  </div>
+                  <div className="line-clamp-2">{business.description}</div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <BsChatText />
+                    <div className="ml-1">{business.totalReview}</div>
+                    <div className="mx-2">
+                      <BsDot />
+                    </div>
+                    <BsStar />
+                    <div className="ml-1">
+                      <>{business.avgRating}</>
+                      {/* {business.totalReview
+                        ? business.totalRating / business.totalReview
+                        : 0} */}
+                    </div>
+                    <div className="mx-2">
+                      <BsDot />
+                    </div>
+                    <div>{business.businessSubcategory.name}</div>
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
         ))}
       </div>
@@ -49,6 +87,14 @@ export const getServerSideProps = async ({
       description: true,
       city: true,
       state: true,
+      totalRating: true,
+      totalReview: true,
+      avgRating: true,
+      businessSubcategory: {
+        select: {
+          name: true,
+        },
+      },
       businessImages: {
         select: {
           url: true,
@@ -78,6 +124,7 @@ export const getServerSideProps = async ({
     skip: 0,
   });
 
+  console.log(businesses);
   return {
     props: {
       businesses: JSON.parse(JSON.stringify(businesses)),
