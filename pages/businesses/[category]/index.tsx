@@ -41,8 +41,8 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
                 />
                 <div>
                   <div className="flex items-end gap-2">
-                    <div>{business.titleEng}</div>
-                    <span className="text-sm font-medium text-gray-400">
+                    <div className="">{business.titleEng}</div>
+                    <span className="shrink-0 text-sm font-medium text-gray-400">
                       {business.city}
                     </span>
                   </div>
