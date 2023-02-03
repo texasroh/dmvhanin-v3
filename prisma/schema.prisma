@@ -17,6 +17,7 @@ model BusinessCategory {
   updatedAt             DateTime              @updatedAt
   name                  String                @db.VarChar(50)
   key                   String                @unique @db.VarChar(20)
+  sort                  Int
   businessSubcategories BusinessSubcategory[]
 }
 

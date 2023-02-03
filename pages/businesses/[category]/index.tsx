@@ -1,7 +1,12 @@
 import { useRouter } from "next/router";
 import client from "@/libs/server/client";
 import { NextPageContext } from "next";
-import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
+import {
+  Business,
+  BusinessCategory,
+  BusinessImage,
+  BusinessSubcategory,
+} from "@prisma/client";
 import { categories } from "..";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -15,6 +20,7 @@ interface ExtendedBusiness extends Business {
 }
 interface ICategoryIndexProps {
   businesses: ExtendedBusiness[];
+  categories: BusinessCategory[];
 }
 
 const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
@@ -28,11 +34,22 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
   }, [categoryKor]);
   return (
     <div>
-      <h1 className="text-lg font-medium">{categoryKor}</h1>
+      <ul className="sticky top-16 flex flex-nowrap space-x-4 overflow-x-auto bg-white p-4">
+        {categories.map((cat) => (
+          <li
+            className={`cursor-pointer whitespace-nowrap rounded-full border px-4 py-2 text-sm ${
+              cat.key === category ? "bg-gray-600 text-white" : "text-gray-600"
+            }`}
+            onClick={() => router.push(cat.key)}
+          >
+            {cat.label}
+          </li>
+        ))}
+      </ul>
       <div className="grid grid-cols-1 md:grid-cols-2">
         {businesses.map((business, idx) => (
           <div className="px-2" key={idx}>
-            <Link href={""}>
+            <Link href={`${category}/${business.titleKor}-${business.uuid}`}>
               <div className="flex space-x-4 border-b py-4 px-4">
                 <CustomImage
                   imgSrc={business.businessImages[0]?.url}
@@ -41,7 +58,9 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
                 />
                 <div>
                   <div className="flex items-end gap-2">
-                    <div className="">{business.titleEng}</div>
+                    <div className="break-all line-clamp-1">
+                      {business.titleEng}
+                    </div>
                     <span className="shrink-0 text-sm font-medium text-gray-400">
                       {business.city}
                     </span>
@@ -84,6 +103,7 @@ export const getServerSideProps = async ({
     select: {
       titleKor: true,
       titleEng: true,
+      uuid: true,
       description: true,
       city: true,
       state: true,
@@ -124,10 +144,20 @@ export const getServerSideProps = async ({
     skip: 0,
   });
 
-  console.log(businesses);
+  // const categories = await client.businessCategory.findMany({
+  //   select: {
+  //     name: true,
+  //     key: true,
+  //   },
+  //   orderBy: {
+  //     sort: "asc",
+  //   },
+  // });
+
   return {
     props: {
       businesses: JSON.parse(JSON.stringify(businesses)),
+      // categories: JSON.parse(JSON.stringify(categories)),
     },
   };
 };
