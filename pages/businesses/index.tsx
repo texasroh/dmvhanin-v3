@@ -34,7 +34,7 @@ const BusinessIndex = () => {
     <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4">
       {categories.map((category) => (
         <div key={category.key} className="p-4">
-          <Link href={`/businesses/${category.key}`}>
+          <Link href={`/businesses/category/${category.key}`}>
             <Image
               src={category.imgSrc}
               alt={category.key}

@@ -33,7 +33,7 @@ model BusinessSubcategory {
 
 model BusinessImage {
   id         Int      @id @default(autoincrement())
-  url        String
+  imageId    String
   business   Business @relation(fields: [businessId], references: [id])
   businessId Int
   sort       Int
@@ -44,6 +44,7 @@ model BusinessImage {
 model Business {
   id                    Int                 @id @default(autoincrement())
   uuid                  String?             @unique @db.VarChar(32)
+  logoImageId           String?
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
   businessSubcategory   BusinessSubcategory @relation(fields: [businessSubcategoryId], references: [id])

@@ -49,10 +49,12 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2">
         {businesses.map((business, idx) => (
           <div className="px-2" key={idx}>
-            <Link href={`${category}/${business.titleKor}-${business.uuid}`}>
+            <Link
+              href={`/businesses/profile/${business.titleKor}-${business.uuid}`}
+            >
               <div className="flex space-x-4 border-b py-4 px-4">
                 <CustomImage
-                  imgSrc={business.businessImages[0]?.url}
+                  imgSrc={business.businessImages[0]?.imageId}
                   alt={business.titleKor}
                   circle
                 />
@@ -117,7 +119,7 @@ export const getServerSideProps = async ({
       },
       businessImages: {
         select: {
-          url: true,
+          imageId: true,
         },
         orderBy: {
           sort: "asc",
