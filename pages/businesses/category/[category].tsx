@@ -1,29 +1,38 @@
 import { useRouter } from "next/router";
 import client from "@/libs/server/client";
 import { NextPageContext } from "next";
-import {
-  Business,
-  BusinessCategory,
-  BusinessImage,
-  BusinessSubcategory,
-} from "@prisma/client";
+import { Business, BusinessSubcategory } from "@prisma/client";
 import { categories } from "..";
-import { useEffect } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import CustomImage from "@/components/customImage";
 import { BsStar, BsChatText, BsDot } from "react-icons/bs";
 import Link from "next/link";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { businessAPI } from "@/libs/client/api";
+import LoadingSpinner from "@/components/loadingSpinner";
+import { useInView } from "react-intersection-observer";
 
 interface ExtendedBusiness extends Business {
-  businessImages: BusinessImage[];
   businessSubcategory: BusinessSubcategory;
 }
+
 interface ICategoryIndexProps {
   businesses: ExtendedBusiness[];
-  categories: BusinessCategory[];
+  totalPage: number;
 }
 
-const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
+interface IGetBusinesses extends ICategoryIndexProps {
+  page: number;
+  totalResult: number;
+}
+
+const PERPAGE = 20;
+
+const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
+  const [data, setData] = useState(businesses);
+  // const [isLoading, setIsLoading] = useState(false);
+  const isLoading = useRef(false);
+  const currentPage = useRef(1);
   const router = useRouter();
   const { category } = router.query;
   const categoryKor = categories.find((obj) => obj.key === category)?.label;
@@ -32,11 +41,48 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
       router.replace("/businesses");
     }
   }, [categoryKor]);
+
+  const { fetchNextPage } = useInfiniteQuery<IGetBusinesses>(
+    ["business", category],
+    businessAPI.getBusinesses,
+    {
+      enabled: false,
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.page < lastPage.totalPage
+          ? lastPage.page + 1
+          : undefined;
+      },
+      onSuccess: (newPageData) => {
+        const lastPage = newPageData.pages[newPageData.pages.length - 1];
+        if (!lastPage) return;
+        console.log("onSuccess lastPage", lastPage.page);
+
+        setData((prev) => [...prev, ...lastPage.businesses]);
+        currentPage.current = lastPage.page;
+        isLoading.current = false;
+        // setIsLoading(false);
+      },
+    }
+  );
+
+  const { ref, inView } = useInView({
+    rootMargin: "30px",
+  });
+
+  useEffect(() => {
+    if (inView && !isLoading.current) {
+      isLoading.current = true;
+      // setIsLoading(true);
+      fetchNextPage();
+    }
+  }, [inView, isLoading]);
+
   return (
-    <div>
+    <div className="space-y-6">
       <ul className="sticky top-16 flex flex-nowrap space-x-4 overflow-x-auto bg-white p-4">
-        {categories.map((cat) => (
+        {categories.map((cat, idx) => (
           <li
+            key={idx}
             className={`cursor-pointer whitespace-nowrap rounded-full border px-4 py-2 text-sm ${
               cat.key === category ? "bg-gray-600 text-white" : "text-gray-600"
             }`}
@@ -47,18 +93,18 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
         ))}
       </ul>
       <div className="grid grid-cols-1 md:grid-cols-2">
-        {businesses.map((business, idx) => (
+        {data.map((business, idx) => (
           <div className="px-2" key={idx}>
             <Link
               href={`/businesses/profile/${business.titleKor}-${business.uuid}`}
             >
               <div className="flex space-x-4 border-b py-4 px-4">
                 <CustomImage
-                  imgSrc={business.businessImages[0]?.imageId}
+                  imgSrc={business.logoImageId}
                   alt={business.titleKor}
                   circle
                 />
-                <div>
+                <div className="space-y-1">
                   <div className="flex items-end gap-2">
                     <div className="break-all line-clamp-1">
                       {business.titleEng}
@@ -67,7 +113,9 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
                       {business.city}
                     </span>
                   </div>
-                  <div className="line-clamp-2">{business.description}</div>
+                  <div className="text-sm leading-4 line-clamp-2">
+                    {business.description}
+                  </div>
                   <div className="flex items-center text-sm text-gray-500">
                     <BsChatText />
                     <div className="ml-1">{business.totalReview}</div>
@@ -77,9 +125,6 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
                     <BsStar />
                     <div className="ml-1">
                       <>{business.avgRating}</>
-                      {/* {business.totalReview
-                        ? business.totalRating / business.totalReview
-                        : 0} */}
                     </div>
                     <div className="mx-2">
                       <BsDot />
@@ -92,6 +137,11 @@ const CategoryIndex = ({ businesses }: ICategoryIndexProps) => {
           </div>
         ))}
       </div>
+      {currentPage.current < totalPage && (
+        <div className="flex justify-center" ref={ref}>
+          <LoadingSpinner />
+        </div>
+      )}
     </div>
   );
 };
@@ -106,6 +156,7 @@ export const getServerSideProps = async ({
       titleKor: true,
       titleEng: true,
       uuid: true,
+      logoImageId: true,
       description: true,
       city: true,
       state: true,
@@ -117,15 +168,6 @@ export const getServerSideProps = async ({
           name: true,
         },
       },
-      businessImages: {
-        select: {
-          imageId: true,
-        },
-        orderBy: {
-          sort: "asc",
-        },
-        take: 1,
-      },
     },
     orderBy: [
       {
@@ -133,6 +175,9 @@ export const getServerSideProps = async ({
       },
       {
         totalReview: "desc",
+      },
+      {
+        id: "asc",
       },
     ],
     where: {
@@ -156,10 +201,21 @@ export const getServerSideProps = async ({
   //   },
   // });
 
+  const totalResult = await client.business.count({
+    where: {
+      businessSubcategory: {
+        businessCategory: {
+          key: category + "",
+        },
+      },
+    },
+  });
+  const totalPage = Math.ceil(totalResult / PERPAGE);
+
   return {
     props: {
       businesses: JSON.parse(JSON.stringify(businesses)),
-      // categories: JSON.parse(JSON.stringify(categories)),
+      totalPage,
     },
   };
 };
