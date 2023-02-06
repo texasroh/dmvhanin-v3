@@ -122,7 +122,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
                 <div className="space-y-1">
                   <div className="flex items-end gap-2">
                     <div className="break-all line-clamp-1">
-                      {business.titleEng}
+                      {business.titleKor}
                     </div>
                     <span className="shrink-0 text-sm font-medium text-gray-400">
                       {business.city}

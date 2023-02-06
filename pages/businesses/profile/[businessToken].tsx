@@ -31,10 +31,8 @@ const BusinessDetail = ({ business }: IBusinessDetailProps) => {
         />
         <div>
           <div>
-            {business.titleEng}{" "}
-            {business.titleKor && (
-              <span className="text-sm">({business.titleKor})</span>
-            )}
+            {business.titleKor}{" "}
+            <span className="text-sm">({business.titleEng})</span>
           </div>
           <div className="flex items-center text-gray-400">
             <div>{business.city}</div>
