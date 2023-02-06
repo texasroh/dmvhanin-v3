@@ -30,7 +30,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } catch {
     page = 1;
   }
-  console.log("page", req.query, page);
 
   const businesses = await client.business.findMany({
     select: {

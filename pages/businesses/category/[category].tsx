@@ -12,12 +12,12 @@ import { businessAPI } from "@/libs/client/api";
 import LoadingSpinner from "@/components/loadingSpinner";
 import { useInView } from "react-intersection-observer";
 
-interface ExtendedBusiness extends Business {
+interface IExtendedBusiness extends Business {
   businessSubcategory: BusinessSubcategory;
 }
 
 interface ICategoryIndexProps {
-  businesses: ExtendedBusiness[];
+  businesses: IExtendedBusiness[];
   totalPage: number;
 }
 
@@ -29,10 +29,11 @@ interface IGetBusinesses extends ICategoryIndexProps {
 const PERPAGE = 20;
 
 const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
-  const [data, setData] = useState(businesses);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<IExtendedBusiness[]>([]);
+
   const isLoading = useRef(false);
   const currentPage = useRef(1);
+
   const router = useRouter();
   const { category } = router.query;
   const categoryKor = categories.find((obj) => obj.key === category)?.label;
@@ -42,7 +43,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
     }
   }, [categoryKor]);
 
-  const { fetchNextPage } = useInfiniteQuery<IGetBusinesses>(
+  const { data: fetchedData, fetchNextPage } = useInfiniteQuery<IGetBusinesses>(
     ["business", category],
     businessAPI.getBusinesses,
     {
@@ -55,15 +56,30 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
       onSuccess: (newPageData) => {
         const lastPage = newPageData.pages[newPageData.pages.length - 1];
         if (!lastPage) return;
-        console.log("onSuccess lastPage", lastPage.page);
 
-        setData((prev) => [...prev, ...lastPage.businesses]);
+        setData([
+          ...businesses,
+          ...newPageData.pages.map((page) => page.businesses).flat(),
+        ]);
         currentPage.current = lastPage.page;
         isLoading.current = false;
-        // setIsLoading(false);
       },
     }
   );
+
+  useEffect(() => {
+    if (fetchedData) {
+      currentPage.current =
+        fetchedData.pages[fetchedData.pages.length - 1].page;
+      setData([
+        ...businesses,
+        ...fetchedData.pages.map((page) => page.businesses).flat(),
+      ]);
+    } else {
+      currentPage.current = 1;
+      setData(businesses);
+    }
+  }, [businesses]);
 
   const { ref, inView } = useInView({
     rootMargin: "30px",
@@ -72,10 +88,9 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
   useEffect(() => {
     if (inView && !isLoading.current) {
       isLoading.current = true;
-      // setIsLoading(true);
       fetchNextPage();
     }
-  }, [inView, isLoading]);
+  }, [inView]);
 
   return (
     <div className="space-y-6">
