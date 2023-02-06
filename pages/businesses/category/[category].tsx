@@ -192,6 +192,9 @@ export const getServerSideProps = async ({
         totalReview: "desc",
       },
       {
+        updatedAt: "desc",
+      },
+      {
         id: "asc",
       },
     ],
@@ -202,7 +205,7 @@ export const getServerSideProps = async ({
         },
       },
     },
-    take: 20,
+    take: PERPAGE,
     skip: 0,
   });
 

@@ -63,6 +63,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         totalReview: "desc",
       },
       {
+        updatedAt: "desc",
+      },
+      {
         id: "asc",
       },
     ],
