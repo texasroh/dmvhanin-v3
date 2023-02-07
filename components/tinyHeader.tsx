@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import logo from "../images/short-logo.png";
 import MainMenu from "./mainMenu";
+import SubMenu from "./subMenu";
 
 const TinyHeader = () => {
   const { scrollY } = useScroll();
@@ -40,6 +41,9 @@ const TinyHeader = () => {
                 <MainMenu />
               </ul>
             </div>
+            <ul className="flex space-x-6 text-lg font-bold text-gray-600">
+              <SubMenu />
+            </ul>
           </div>
         </motion.header>
       )}
