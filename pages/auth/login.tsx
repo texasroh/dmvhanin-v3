@@ -1,11 +1,26 @@
+import { actionCodeSettings, auth } from "@/\bfirebase/auth";
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { FaGooglePlusG } from "react-icons/fa";
 import { RiKakaoTalkFill } from "react-icons/ri";
 
+interface ILoginForm {
+  email: string;
+}
 const Login = () => {
-  const formObj = useForm();
+  const formObj = useForm<ILoginForm>();
+
+  const onSubmit = ({ email }: ILoginForm) => {
+    console.log(email);
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      .then(() => localStorage.setItem("emailForSignIn", email))
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
 
   return (
     <div className="mx-auto max-w-[400px]">
@@ -13,7 +28,7 @@ const Login = () => {
       <p className="my-12 text-center text-sm">
         로그인 하시고 다양한 서비스를 이용하세요
       </p>
-      <form>
+      <form onSubmit={formObj.handleSubmit(onSubmit)}>
         <div className="space-y-4">
           <Input formObj={formObj} name="email" label="Email" type="email" />
           <div className="overflow-hidden rounded-full">

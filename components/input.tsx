@@ -3,7 +3,7 @@ import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 interface IInputProps {
-  formObj: UseFormReturn;
+  formObj: UseFormReturn<any>;
   label: string;
   name: string;
   type?: "text" | "email";

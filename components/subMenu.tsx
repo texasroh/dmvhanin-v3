@@ -4,7 +4,7 @@ const SubMenu = () => {
   return (
     <>
       <li>
-        <Link href={"/login"}>로그인</Link>
+        <Link href={"/auth/login"}>로그인</Link>
       </li>
     </>
   );
