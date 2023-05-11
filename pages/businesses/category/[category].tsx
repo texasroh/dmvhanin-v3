@@ -94,7 +94,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
 
   return (
     <div className="space-y-6">
-      <ul className="sticky top-16 flex flex-nowrap space-x-4 overflow-x-auto bg-white p-4">
+      <ul className="hide-x-scroll sticky top-16 flex flex-nowrap space-x-4 overflow-x-auto bg-white p-4">
         {categories.map((cat, idx) => (
           <li
             key={idx}

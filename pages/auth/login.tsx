@@ -1,19 +1,29 @@
-import { actionCodeSettings, auth } from "@/\bfirebase/auth";
+import { userAtom } from "@/atom/auth";
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { signInWithGoogle } from "@/libs/client/auth";
+import { actionCodeSettings, auth } from "fb/auth";
 import { sendSignInLinkToEmail } from "firebase/auth";
+import { useAtomValue } from "jotai";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaGooglePlusG } from "react-icons/fa";
-import { RiKakaoTalkFill } from "react-icons/ri";
 
 interface ILoginForm {
   email: string;
 }
 const Login = () => {
   const formObj = useForm<ILoginForm>();
+  const user = useAtomValue(userAtom);
+
+  useEffect(() => {
+    if (user) {
+      redirect("/");
+    }
+  }, [user]);
 
   const onSubmit = ({ email }: ILoginForm) => {
-    console.log(email);
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => localStorage.setItem("emailForSignIn", email))
       .catch((error) => {
@@ -43,12 +53,15 @@ const Login = () => {
         </span>
       </div>
       <div className="-mt-8 flex justify-center space-x-6">
-        <div className="rounded-full bg-red-500 p-2">
+        <div
+          className="cursor-pointer rounded-full bg-red-500 p-2"
+          onClick={signInWithGoogle}
+        >
           <FaGooglePlusG color="white" size={30} />
         </div>
-        <div className="rounded-full bg-yellow-400 p-2">
+        {/* <div className="rounded-full bg-yellow-400 p-2">
           <RiKakaoTalkFill size={30} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

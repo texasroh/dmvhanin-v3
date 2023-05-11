@@ -9,3 +9,9 @@
     }
   }
 }
+
+.hide-x-scroll {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
