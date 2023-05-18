@@ -1,11 +1,10 @@
-import { userAtom } from "@/atom/auth";
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { useUser } from "@/hooks/useUser";
 import { signInWithGoogle } from "@/libs/client/auth";
 import { actionCodeSettings, auth } from "fb/auth";
 import { sendSignInLinkToEmail } from "firebase/auth";
-import { useAtomValue } from "jotai";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaGooglePlusG } from "react-icons/fa";
@@ -15,11 +14,12 @@ interface ILoginForm {
 }
 const Login = () => {
   const formObj = useForm<ILoginForm>();
-  const user = useAtomValue(userAtom);
+  const { user } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      redirect("/");
+      router.replace("/");
     }
   }, [user]);
 

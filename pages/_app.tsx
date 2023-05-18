@@ -1,28 +1,30 @@
-import { userAtom } from "@/atom/auth";
 import Layout from "@/components/layout";
 import { auth } from "@/fb/auth";
+import { useUser } from "@/hooks/useUser";
 import "@/styles/globals.scss";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useSetAtom } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
-  const setUser = useSetAtom(userAtom);
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      setUser({
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-      });
-    } else {
-      setUser(null);
-    }
-  });
+  const { setUser } = useUser();
+  useEffect(() => {
+    auth.onAuthStateChanged((fbUser) => {
+      if (fbUser) {
+        setUser({
+          uid: fbUser.uid,
+          displayName: fbUser.displayName,
+          email: fbUser.email,
+          photoURL: fbUser.photoURL,
+        });
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
   return (
     <>
       <Head>
