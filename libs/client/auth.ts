@@ -3,7 +3,11 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export const signInWithGoogle = () => {
   const googleAuthProvider = new GoogleAuthProvider();
-  signInWithPopup(auth, googleAuthProvider);
+  try {
+    signInWithPopup(auth, googleAuthProvider);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const signInWithEmail = () => {};

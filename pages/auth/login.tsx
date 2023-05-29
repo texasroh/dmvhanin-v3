@@ -1,8 +1,8 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { actionCodeSettings, auth } from "@/fb/auth";
 import { useUser } from "@/hooks/useUser";
 import { signInWithGoogle } from "@/libs/client/auth";
-import { actionCodeSettings, auth } from "fb/auth";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -13,7 +13,11 @@ interface ILoginForm {
   email: string;
 }
 const Login = () => {
-  const formObj = useForm<ILoginForm>();
+  const {
+    register,
+    formState: { isSubmitting, isValid },
+    handleSubmit,
+  } = useForm<ILoginForm>();
   const { user } = useUser();
   const router = useRouter();
 
@@ -24,6 +28,8 @@ const Login = () => {
   }, [user]);
 
   const onSubmit = ({ email }: ILoginForm) => {
+    if (isSubmitting) return;
+    // console.log(data, "email");
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => localStorage.setItem("emailForSignIn", email))
       .catch((error) => {
@@ -38,9 +44,9 @@ const Login = () => {
       <p className="my-12 text-center text-sm">
         로그인 하시고 다양한 서비스를 이용하세요
       </p>
-      <form onSubmit={formObj.handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
-          <Input formObj={formObj} name="email" label="Email" type="email" />
+          <Input label="Email" {...register("email")} type="email" />
           <div className="overflow-hidden rounded-full">
             <Button title="Continue with email" />
           </div>

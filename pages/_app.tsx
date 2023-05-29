@@ -1,5 +1,6 @@
 import Layout from "@/components/layout";
 import { auth } from "@/fb/auth";
+import { useResetAtoms } from "@/hooks/useResetAtoms";
 import { useUser } from "@/hooks/useUser";
 import "@/styles/globals.scss";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const { setUser } = useUser();
+  const resetAtoms = useResetAtoms();
   useEffect(() => {
     auth.onAuthStateChanged((fbUser) => {
       if (fbUser) {
@@ -21,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
           photoURL: fbUser.photoURL,
         });
       } else {
-        setUser(null);
+        resetAtoms();
       }
     });
   }, []);
