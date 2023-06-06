@@ -106,6 +106,13 @@ export const getServerSideProps = async ({
       uuid,
     },
   });
+  if (!business) {
+    return {
+      redirect: {
+        destination: "/businesses",
+      },
+    };
+  }
 
   return {
     props: {
