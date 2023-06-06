@@ -65,4 +65,13 @@ model Business {
   totalRating           Int                 @default(0)
   totalReview           Int                 @default(0)
   avgRating             Decimal             @default(0) @db.Decimal(3, 2)
+  BusinessReview        BusinessReview[]
+}
+
+model BusinessReview {
+  id         Int      @id @default(autoincrement())
+  business   Business @relation(fields: [businessId], references: [id])
+  businessId Int
+  uid        String   @db.VarChar(50)
+  review     String
 }

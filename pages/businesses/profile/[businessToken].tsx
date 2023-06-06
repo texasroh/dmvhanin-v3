@@ -1,12 +1,18 @@
+import ReviewForm from "@/components/business/reviewForm";
+import CustomImage from "@/components/customImage";
+import ImageSlider from "@/components/imageSlider";
+import { formatPhone } from "@/libs/client/number";
+import client from "@/libs/server/client";
 import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
 import { NextPageContext } from "next";
-import client from "@/libs/server/client";
-import ImageSlider from "@/components/imageSlider";
-import CustomImage from "@/components/customImage";
-import { BsDot, BsTelephone, BsGlobe } from "react-icons/bs";
-import { BiMap } from "react-icons/bi";
-import { formatPhone } from "@/libs/client/number";
+import dynamic from "next/dynamic";
 import { AiOutlineMail } from "react-icons/ai";
+import { BiMap } from "react-icons/bi";
+import { BsDot, BsGlobe, BsTelephone } from "react-icons/bs";
+
+const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
+  ssr: false,
+});
 
 interface ExtendedBusiness extends Business {
   businessImages: BusinessImage[];
@@ -78,6 +84,7 @@ const BusinessDetail = ({ business }: IBusinessDetailProps) => {
       </div>
       <div>
         <h3 className="py-3 text-lg font-bold">Reviews</h3>
+        <ReviewForm />
         <p>No reviews yet.</p>
       </div>
     </div>
