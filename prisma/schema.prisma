@@ -73,5 +73,6 @@ model BusinessReview {
   business   Business @relation(fields: [businessId], references: [id])
   businessId Int
   uid        String   @db.VarChar(50)
-  review     String
+  reviewHTML String
+  rawContent String
 }
