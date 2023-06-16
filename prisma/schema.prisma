@@ -11,6 +11,15 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model User {
+  id             Int              @id @default(autoincrement())
+  uid            String           @unique @db.VarChar(50)
+  displayName    String           @db.VarChar(50)
+  photoURL       String           @db.VarChar(250)
+  email          String           @db.VarChar(50)
+  BusinessReview BusinessReview[]
+}
+
 model BusinessCategory {
   id                    Int                   @id @default(autoincrement())
   createdAt             DateTime              @default(now())
@@ -72,7 +81,8 @@ model BusinessReview {
   id         Int      @id @default(autoincrement())
   business   Business @relation(fields: [businessId], references: [id])
   businessId Int
-  uid        String   @db.VarChar(50)
-  reviewHTML String
   rawContent String
+  reviewHTML String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
 }

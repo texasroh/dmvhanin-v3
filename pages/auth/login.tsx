@@ -48,7 +48,7 @@ const Login = () => {
         <div className="space-y-4">
           <Input label="Email" {...register("email")} type="email" />
           <div className="overflow-hidden rounded-full">
-            <Button title="Continue with email" />
+            <Button>Continue with email</Button>
           </div>
         </div>
       </form>

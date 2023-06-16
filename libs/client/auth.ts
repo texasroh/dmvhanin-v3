@@ -1,10 +1,10 @@
 import { auth } from "@/fb/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-export const signInWithGoogle = () => {
+export const signInWithGoogle = async () => {
   const googleAuthProvider = new GoogleAuthProvider();
   try {
-    signInWithPopup(auth, googleAuthProvider);
+    const userCredential = await signInWithPopup(auth, googleAuthProvider);
   } catch (err) {
     console.log(err);
   }
