@@ -17,7 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
     auth.onAuthStateChanged((fbUser) => {
       if (fbUser) {
         setUser({
-          uid: fbUser.uid,
           displayName: fbUser.displayName,
           email: fbUser.email,
           photoURL: fbUser.photoURL,

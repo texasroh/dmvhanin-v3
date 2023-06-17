@@ -4,7 +4,6 @@ import { atomWithStorage } from "jotai/utils";
 import { useCallback } from "react";
 
 type User = {
-  uid: string;
   displayName: string | null;
   email: string | null;
   photoURL: string | null;

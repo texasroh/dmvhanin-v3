@@ -1,7 +1,7 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import { useUser } from "@/hooks/useUser";
-import { signInWithEmail, signInWithGoogle } from "@/libs/client/auth";
+import { sendSignInEmail, signInWithGoogle } from "@/libs/client/auth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,8 @@ const Login = () => {
 
   const onSubmit = ({ email }: ILoginForm) => {
     if (isSubmitting) return;
-    signInWithEmail(email);
+
+    sendSignInEmail(email);
   };
 
   return (

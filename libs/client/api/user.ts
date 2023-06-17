@@ -1,6 +1,9 @@
+import { POST_USER_LOGIN } from "@/constants/urls";
 import axios from "axios";
-import { sprintf } from "sprintf-js";
+import { User } from "firebase/auth";
 
-const getOrCreateUser = async (uid: string) => {
-  axios.get(sprintf(GET_OR_CREATE_USER, uid));
+export const userAPI = {
+  postUserLogin: async (user: User) => {
+    return axios.post(POST_USER_LOGIN, { user });
+  },
 };

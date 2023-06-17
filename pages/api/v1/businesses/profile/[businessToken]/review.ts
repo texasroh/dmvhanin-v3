@@ -10,7 +10,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const review = await client.businessReview.create({
         data: {
-          uid,
+          user: {
+            connect: {
+              uid,
+            },
+          },
           rawContent,
           reviewHTML,
           business: {

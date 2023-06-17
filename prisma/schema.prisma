@@ -13,6 +13,9 @@ datasource db {
 
 model User {
   id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  lastLogin       DateTime         @default(now())
   uid             String           @unique @db.VarChar(50)
   displayName     String           @db.VarChar(50)
   photoURL        String           @db.VarChar(250)
