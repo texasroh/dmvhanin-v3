@@ -1,16 +1,16 @@
-import { useRouter } from "next/router";
-import client from "@/libs/server/client";
-import { NextPageContext } from "next";
-import { Business, BusinessSubcategory } from "@prisma/client";
-import { categories } from "..";
-import { useEffect, useRef, useState } from "react";
 import CustomImage from "@/components/customImage";
-import { BsStar, BsChatText, BsDot } from "react-icons/bs";
-import Link from "next/link";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { businessAPI } from "@/libs/client/api";
 import LoadingSpinner from "@/components/loadingSpinner";
+import { businessAPI } from "@/libs/client/api/business";
+import client from "@/libs/server/client";
+import { Business, BusinessSubcategory } from "@prisma/client";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { NextPageContext } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { BsChatText, BsDot, BsStar } from "react-icons/bs";
 import { useInView } from "react-intersection-observer";
+import { categories } from "..";
 
 interface IExtendedBusiness extends Business {
   businessSubcategory: BusinessSubcategory;

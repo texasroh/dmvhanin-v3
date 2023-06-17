@@ -1,9 +1,7 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
-import { actionCodeSettings, auth } from "@/fb/auth";
 import { useUser } from "@/hooks/useUser";
-import { signInWithGoogle } from "@/libs/client/auth";
-import { sendSignInLinkToEmail } from "firebase/auth";
+import { signInWithEmail, signInWithGoogle } from "@/libs/client/auth";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -29,13 +27,7 @@ const Login = () => {
 
   const onSubmit = ({ email }: ILoginForm) => {
     if (isSubmitting) return;
-    // console.log(data, "email");
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then(() => localStorage.setItem("emailForSignIn", email))
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+    signInWithEmail(email);
   };
 
   return (

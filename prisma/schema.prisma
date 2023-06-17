@@ -12,12 +12,12 @@ datasource db {
 }
 
 model User {
-  id             Int              @id @default(autoincrement())
-  uid            String           @unique @db.VarChar(50)
-  displayName    String           @db.VarChar(50)
-  photoURL       String           @db.VarChar(250)
-  email          String           @db.VarChar(50)
-  BusinessReview BusinessReview[]
+  id              Int              @id @default(autoincrement())
+  uid             String           @unique @db.VarChar(50)
+  displayName     String           @db.VarChar(50)
+  photoURL        String           @db.VarChar(250)
+  email           String           @db.VarChar(50)
+  BusinessReviews BusinessReview[]
 }
 
 model BusinessCategory {
@@ -74,7 +74,7 @@ model Business {
   totalRating           Int                 @default(0)
   totalReview           Int                 @default(0)
   avgRating             Decimal             @default(0) @db.Decimal(3, 2)
-  BusinessReview        BusinessReview[]
+  BusinessReviews       BusinessReview[]
 }
 
 model BusinessReview {

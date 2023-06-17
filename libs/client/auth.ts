@@ -1,5 +1,9 @@
-import { auth } from "@/fb/auth";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { actionCodeSettings, auth } from "@/fb/auth";
+import {
+  GoogleAuthProvider,
+  sendSignInLinkToEmail,
+  signInWithPopup,
+} from "firebase/auth";
 
 export const signInWithGoogle = async () => {
   const googleAuthProvider = new GoogleAuthProvider();
@@ -10,4 +14,11 @@ export const signInWithGoogle = async () => {
   }
 };
 
-export const signInWithEmail = () => {};
+export const signInWithEmail = async (email: string) => {
+  sendSignInLinkToEmail(auth, email, actionCodeSettings)
+    .then(() => localStorage.setItem("emailForSignIn", email))
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
+};

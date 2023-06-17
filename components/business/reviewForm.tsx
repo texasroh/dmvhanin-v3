@@ -5,7 +5,7 @@ import {
   PostReviewError,
   PostReviewVariable,
   businessAPI,
-} from "@/libs/client/api";
+} from "@/libs/client/api/business";
 import { useMutation } from "@tanstack/react-query";
 import { EditorState } from "draft-js";
 import dynamic from "next/dynamic";

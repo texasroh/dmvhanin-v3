@@ -1,7 +1,9 @@
 import { ReviewFormData } from "@/components/business/reviewForm";
+import { GET_BUSINESSES, POST_REVIEW } from "@/constants/urls";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
-import { editorStateToHTML, editorStateToString } from "./editor";
+import { sprintf } from "sprintf-js";
+import { editorStateToHTML, editorStateToString } from "../editor";
 
 export interface PostReviewVariable extends ReviewFormData {
   businessToken: string;
@@ -20,12 +22,12 @@ export const businessAPI = {
   getBusinesses: ({ queryKey, pageParam = 2 }: QueryFunctionContext) => {
     // console.log("inside fetch fn", queryKey[1], pageParam);
     return axios
-      .get(`/api/businesses/${queryKey[1]}?page=${pageParam}`)
+      .get(sprintf(GET_BUSINESSES, queryKey[1], pageParam))
       .then((response) => response.data);
   },
   postReview: ({ businessToken, review, uid }: PostReviewVariable) => {
     return axios
-      .post(`/api/businesses/profile/${businessToken}/review`, {
+      .post(sprintf(POST_REVIEW, businessToken), {
         uid,
         rawContent: editorStateToString(review),
         reviewHTML: editorStateToHTML(review),
