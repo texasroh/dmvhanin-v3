@@ -13,9 +13,9 @@ datasource db {
 
 model User {
   id              Int              @id @default(autoincrement())
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  lastLogin       DateTime         @default(now())
+  createdAt       DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime         @updatedAt @db.Timestamptz(3)
+  lastLogin       DateTime         @default(now()) @db.Timestamptz(3)
   uid             String           @unique @db.VarChar(50)
   displayName     String           @db.VarChar(50)
   photoURL        String           @db.VarChar(250)
@@ -25,8 +25,8 @@ model User {
 
 model BusinessCategory {
   id                    Int                   @id @default(autoincrement())
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
+  createdAt             DateTime              @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime              @updatedAt @db.Timestamptz(3)
   name                  String                @db.VarChar(50)
   key                   String                @unique @db.VarChar(20)
   sort                  Int
@@ -35,8 +35,8 @@ model BusinessCategory {
 
 model BusinessSubcategory {
   id                 Int              @id @default(autoincrement())
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  createdAt          DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime         @updatedAt @db.Timestamptz(3)
   name               String           @db.VarChar(50)
   businessCategory   BusinessCategory @relation(fields: [businessCategoryId], references: [id])
   businessCategoryId Int
@@ -57,8 +57,8 @@ model Business {
   id                    Int                 @id @default(autoincrement())
   uuid                  String?             @unique @db.VarChar(32)
   logoImageId           String?
-  createdAt             DateTime            @default(now())
-  updatedAt             DateTime            @updatedAt
+  createdAt             DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime            @updatedAt @db.Timestamptz(3)
   businessSubcategory   BusinessSubcategory @relation(fields: [businessSubcategoryId], references: [id])
   businessSubcategoryId Int
   businessImages        BusinessImage[]
@@ -82,6 +82,8 @@ model Business {
 
 model BusinessReview {
   id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
   business   Business @relation(fields: [businessId], references: [id])
   businessId Int
   rawContent String

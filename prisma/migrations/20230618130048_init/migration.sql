@@ -1,8 +1,22 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(3) NOT NULL,
+    "lastLogin" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "uid" VARCHAR(50) NOT NULL,
+    "displayName" VARCHAR(50) NOT NULL,
+    "photoURL" VARCHAR(250) NOT NULL,
+    "email" VARCHAR(50) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "BusinessCategory" (
     "id" SERIAL NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(3) NOT NULL,
     "name" VARCHAR(50) NOT NULL,
     "key" VARCHAR(20) NOT NULL,
     "sort" INTEGER NOT NULL,
@@ -13,8 +27,8 @@ CREATE TABLE "BusinessCategory" (
 -- CreateTable
 CREATE TABLE "BusinessSubcategory" (
     "id" SERIAL NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(3) NOT NULL,
     "name" VARCHAR(50) NOT NULL,
     "businessCategoryId" INTEGER NOT NULL,
 
@@ -36,8 +50,8 @@ CREATE TABLE "Business" (
     "id" SERIAL NOT NULL,
     "uuid" VARCHAR(32),
     "logoImageId" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(3) NOT NULL,
     "businessSubcategoryId" INTEGER NOT NULL,
     "titleKor" VARCHAR(100) NOT NULL,
     "titleEng" VARCHAR(100) NOT NULL,
@@ -61,12 +75,18 @@ CREATE TABLE "Business" (
 -- CreateTable
 CREATE TABLE "BusinessReview" (
     "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(3) NOT NULL,
     "businessId" INTEGER NOT NULL,
-    "uid" VARCHAR(50) NOT NULL,
-    "review" TEXT NOT NULL,
+    "rawContent" TEXT NOT NULL,
+    "reviewHTML" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "BusinessReview_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_uid_key" ON "User"("uid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "BusinessCategory_key_key" ON "BusinessCategory"("key");
@@ -88,3 +108,6 @@ ALTER TABLE "Business" ADD CONSTRAINT "Business_businessSubcategoryId_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "BusinessReview" ADD CONSTRAINT "BusinessReview_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BusinessReview" ADD CONSTRAINT "BusinessReview_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
