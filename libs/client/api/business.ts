@@ -1,13 +1,18 @@
-import { ReviewFormData } from "@/components/business/reviewForm";
-import { GET_BUSINESSES, POST_REVIEW } from "@/constants/urls";
+import {
+  GET_BUSINESSES,
+  GET_BUSINESS_REVIEWS,
+  POST_BUSINESS_REVIEW,
+} from "@/constants/urls";
+import { BusinessReview } from "@prisma/client";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
 import { sprintf } from "sprintf-js";
-import { editorStateToHTML, editorStateToString } from "../editor";
 
-export interface PostReviewVariable extends ReviewFormData {
+export interface PostReviewVariable {
   businessToken: string;
   uid: string;
+  rawContent: string;
+  rating: number;
 }
 
 export interface PostReviewData {
@@ -18,20 +23,34 @@ export interface PostReviewError {
   error: string;
 }
 
+interface GetReviews {
+  reviews: BusinessReview[];
+}
+
 export const businessAPI = {
   getBusinesses: ({ queryKey, pageParam = 2 }: QueryFunctionContext) => {
-    // console.log("inside fetch fn", queryKey[1], pageParam);
     return axios
       .get(sprintf(GET_BUSINESSES, queryKey[1], pageParam))
       .then((response) => response.data);
   },
-  postReview: ({ businessToken, review, uid }: PostReviewVariable) => {
+  postReview: ({
+    businessToken,
+    rawContent,
+    uid,
+    rating,
+  }: PostReviewVariable) => {
     return axios
-      .post(sprintf(POST_REVIEW, businessToken), {
+      .post(sprintf(POST_BUSINESS_REVIEW, businessToken), {
         uid,
-        rawContent: editorStateToString(review),
-        reviewHTML: editorStateToHTML(review),
+        rawContent,
+        rating,
       })
+      .then((response) => response.data)
+      .catch(console.log);
+  },
+  getReviews: ({ queryKey, pageParam = 2 }: QueryFunctionContext) => {
+    return axios
+      .get<GetReviews>(sprintf(GET_BUSINESS_REVIEWS, queryKey[1], pageParam))
       .then((response) => response.data);
   },
 };

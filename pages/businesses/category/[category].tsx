@@ -1,7 +1,8 @@
 import CustomImage from "@/components/customImage";
 import LoadingSpinner from "@/components/loadingSpinner";
+import { BUSINESS_PER_PAGE } from "@/constants/numbers";
 import { businessAPI } from "@/libs/client/api/business";
-import client from "@/libs/server/client";
+import { businessQuery } from "@/libs/server/business";
 import { Business, BusinessSubcategory } from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { NextPageContext } from "next";
@@ -26,12 +27,9 @@ interface IGetBusinesses extends ICategoryIndexProps {
   totalResult: number;
 }
 
-const PERPAGE = 20;
-
 const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
   const [data, setData] = useState<IExtendedBusiness[]>([]);
 
-  const isLoading = useRef(false);
   const currentPage = useRef(1);
 
   const router = useRouter();
@@ -43,7 +41,11 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
     }
   }, [categoryKor]);
 
-  const { data: fetchedData, fetchNextPage } = useInfiniteQuery<IGetBusinesses>(
+  const {
+    data: fetchedData,
+    fetchNextPage,
+    isFetching,
+  } = useInfiniteQuery<IGetBusinesses>(
     ["business", category],
     businessAPI.getBusinesses,
     {
@@ -62,7 +64,6 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
           ...newPageData.pages.map((page) => page.businesses).flat(),
         ]);
         currentPage.current = lastPage.page;
-        isLoading.current = false;
       },
     }
   );
@@ -86,8 +87,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
   });
 
   useEffect(() => {
-    if (inView && !isLoading.current) {
-      isLoading.current = true;
+    if (inView && !isFetching) {
       fetchNextPage();
     }
   }, [inView]);
@@ -166,69 +166,11 @@ export default CategoryIndex;
 export const getServerSideProps = async ({
   query: { category },
 }: NextPageContext) => {
-  const businesses = await client.business.findMany({
-    select: {
-      titleKor: true,
-      titleEng: true,
-      uuid: true,
-      logoImageId: true,
-      description: true,
-      city: true,
-      state: true,
-      totalRating: true,
-      totalReview: true,
-      avgRating: true,
-      businessSubcategory: {
-        select: {
-          name: true,
-        },
-      },
-    },
-    orderBy: [
-      {
-        avgRating: "desc",
-      },
-      {
-        totalReview: "desc",
-      },
-      {
-        updatedAt: "desc",
-      },
-      {
-        id: "asc",
-      },
-    ],
-    where: {
-      businessSubcategory: {
-        businessCategory: {
-          key: category + "",
-        },
-      },
-    },
-    take: PERPAGE,
-    skip: 0,
-  });
+  const businesses = await businessQuery.getBusinesses(category + "", 1);
 
-  // const categories = await client.businessCategory.findMany({
-  //   select: {
-  //     name: true,
-  //     key: true,
-  //   },
-  //   orderBy: {
-  //     sort: "asc",
-  //   },
-  // });
+  const totalResult = await businessQuery.getTotalBusinessCount(category + "");
 
-  const totalResult = await client.business.count({
-    where: {
-      businessSubcategory: {
-        businessCategory: {
-          key: category + "",
-        },
-      },
-    },
-  });
-  const totalPage = Math.ceil(totalResult / PERPAGE);
+  const totalPage = Math.ceil(totalResult / BUSINESS_PER_PAGE);
 
   return {
     props: {

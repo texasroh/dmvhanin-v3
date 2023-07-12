@@ -6,18 +6,23 @@ import {
   PostReviewVariable,
   businessAPI,
 } from "@/libs/client/api/business";
+import { editorStateToString } from "@/libs/client/editor";
 import { useMutation } from "@tanstack/react-query";
 import { EditorState } from "draft-js";
-import dynamic from "next/dynamic";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "../button";
+import DraftEditor from "../draftEditor";
+import StarRating from "../starRating";
+// import dynamic from "next/dynamic";
 
-const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
-  ssr: false,
-});
+// const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
+//   ssr: false,
+// });
 
 export interface ReviewFormData {
   review: EditorState;
+  rating: number;
 }
 
 interface ReviewFormProps {
@@ -27,20 +32,38 @@ interface ReviewFormProps {
 const ReviewForm = ({ businessToken }: ReviewFormProps) => {
   const { user } = useUser();
 
+  const [emptySwitch, setEmptySwitch] = useState(false);
+  const [ratingValue, setRatingValue] = useState(0);
+
   const { mutate, isLoading, data, error } = useMutation<
     PostReviewData,
     PostReviewError,
     PostReviewVariable
-  >(businessAPI.postReview);
-  const { handleSubmit, register, control } = useForm<ReviewFormData>({
-    defaultValues: { review: EditorState.createEmpty() },
+  >(businessAPI.postReview, {
+    onSuccess: () => {
+      setEmptySwitch((prev) => !prev);
+    },
+    onError: console.log,
   });
 
-  const onSubmit = ({ review }: ReviewFormData) => {
-    if (!auth.currentUser || !review.getCurrentContent().hasText()) return;
-    mutate({ uid: auth.currentUser.uid, review, businessToken });
-    console.log("data", data);
-    console.log("error", error);
+  const { handleSubmit, control, setValue } = useForm<ReviewFormData>({
+    defaultValues: { review: EditorState.createEmpty(), rating: 0 },
+  });
+
+  const onSubmit = ({ review, rating }: ReviewFormData) => {
+    if (!auth.currentUser || !review.getCurrentContent().hasText() || !rating)
+      return;
+    mutate({
+      uid: auth.currentUser.uid,
+      rawContent: editorStateToString(review),
+      businessToken,
+      rating,
+    });
+  };
+
+  const onValueChange = (value: number) => {
+    setValue("rating", value);
+    setRatingValue(value);
   };
 
   return (
@@ -52,13 +75,16 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
               <DraftEditor
                 placeholder="Leave your comment here"
                 onChange={onChange}
+                readonly={isLoading}
+                emptySwitch={emptySwitch}
               />
             )}
             name="review"
             control={control}
           />
         </div>
-        <div className="w-full grow self-end">
+        <div className="w-full grow space-y-2 self-end">
+          <StarRating value={ratingValue} onValueChange={onValueChange} />
           <Button isLoading={isLoading}>Submit</Button>
         </div>
       </div>

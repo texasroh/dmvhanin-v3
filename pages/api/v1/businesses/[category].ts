@@ -1,77 +1,26 @@
+import { BUSINESS_PER_PAGE } from "@/constants/numbers";
+import { businessQuery } from "@/libs/server/business";
 import { NextApiRequest, NextApiResponse } from "next";
-import client from "@/libs/server/client";
-
-const PERPAGE = 20;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { category },
+    query: { category, page },
   } = req;
 
-  const totalResult = await client.business.count({
-    where: {
-      businessSubcategory: {
-        businessCategory: {
-          key: category + "",
-        },
-      },
-    },
-  });
-  const totalPage = Math.ceil(totalResult / PERPAGE);
+  const totalResult = await businessQuery.getTotalBusinessCount(category + "");
+  const totalPage = Math.ceil(totalResult / BUSINESS_PER_PAGE);
 
-  let page;
+  let pageInt;
   try {
-    if ("page" in req.query && typeof req.query.page === "string") {
-      page = parseInt(req.query.page);
-      if (page > totalPage) {
-        page = totalPage;
-      }
+    pageInt = parseInt(page + "");
+    if (pageInt > totalPage) {
+      pageInt = totalPage;
     }
   } catch {
-    page = 1;
+    pageInt = 1;
   }
 
-  const businesses = await client.business.findMany({
-    select: {
-      titleKor: true,
-      titleEng: true,
-      uuid: true,
-      description: true,
-      city: true,
-      state: true,
-      totalRating: true,
-      totalReview: true,
-      avgRating: true,
-      businessSubcategory: {
-        select: {
-          name: true,
-        },
-      },
-    },
-    where: {
-      businessSubcategory: {
-        businessCategory: {
-          key: category + "",
-        },
-      },
-    },
-    orderBy: [
-      {
-        avgRating: "desc",
-      },
-      {
-        totalReview: "desc",
-      },
-      {
-        updatedAt: "desc",
-      },
-      {
-        id: "asc",
-      },
-    ],
-    take: PERPAGE,
-    skip: PERPAGE * (page ? page - 1 : 1),
-  });
+  const businesses = await businessQuery.getBusinesses(category + "", pageInt);
 
-  res.json({ page, businesses, totalResult, totalPage });
+  res.json({ page: pageInt, businesses, totalResult, totalPage });
 };

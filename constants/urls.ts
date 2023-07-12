@@ -12,4 +12,6 @@ export const POST_USER_LOGIN = BASE_API_URL + "/user/login";
  */
 
 export const GET_BUSINESSES = BASE_API_URL + "/businesses/%s?page=%d";
-export const POST_REVIEW = BASE_API_URL + "/businesses/profile/%s/review";
+export const POST_BUSINESS_REVIEW =
+  BASE_API_URL + "/businesses/profile/%s/reviews";
+export const GET_BUSINESS_REVIEWS = POST_BUSINESS_REVIEW + "?page=%d";
