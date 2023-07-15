@@ -2,7 +2,6 @@ import Review from "@/components/business/review";
 import ReviewForm from "@/components/business/reviewForm";
 import CustomImage from "@/components/customImage";
 import ImageSlider from "@/components/imageSlider";
-import { BUSINESS_REVIEW_PER_PAGE } from "@/constants/numbers";
 import { useUser } from "@/hooks/useUser";
 import { formatPhone } from "@/libs/client/number";
 import { ExtendedBusinessReview, businessQuery } from "@/libs/server/business";
@@ -35,7 +34,6 @@ const BusinessDetail = ({
   business,
   businessToken,
   reviews,
-  totalReviewPage,
 }: IBusinessDetailProps) => {
   const { user } = useUser();
 
@@ -140,18 +138,13 @@ export const getServerSideProps = async ({
     };
   }
 
-  const reviews = await businessQuery.getReviews(uuid, 1);
-  const totalReviewCount = await businessQuery.getTotalReviewCount(uuid);
-  const totalReviewPage = Math.ceil(
-    totalReviewCount / BUSINESS_REVIEW_PER_PAGE
-  );
+  const reviews = await businessQuery.getReviews(uuid);
 
   return {
     props: {
       business: JSON.parse(JSON.stringify(business)),
       businessToken: uuid,
       reviews: JSON.parse(JSON.stringify(reviews)),
-      totalReviewPage,
     },
   };
 };

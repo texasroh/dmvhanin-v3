@@ -1,7 +1,4 @@
-import {
-  BUSINESS_PER_PAGE,
-  BUSINESS_REVIEW_PER_PAGE,
-} from "@/constants/numbers";
+import { BUSINESS_PER_PAGE } from "@/constants/numbers";
 import { BusinessReview, User } from "@prisma/client";
 import client from "./client";
 
@@ -73,7 +70,7 @@ export const businessQuery = {
         },
       },
     }),
-  getReviews: (uuid: string, page: number) =>
+  getReviews: (uuid: string) =>
     client.businessReview.findMany({
       select: {
         createdAt: true,
@@ -95,16 +92,6 @@ export const businessQuery = {
       },
       orderBy: {
         id: "desc",
-      },
-      take: BUSINESS_REVIEW_PER_PAGE,
-      skip: (page - 1) * BUSINESS_REVIEW_PER_PAGE,
-    }),
-  getTotalReviewCount: (uuid: string) =>
-    client.businessReview.count({
-      where: {
-        business: {
-          uuid,
-        },
       },
     }),
   postBusinessReview: (

@@ -4,9 +4,16 @@ import StarIcon from "./starIcon";
 interface StarRatingProps {
   value?: number;
   onValueChange?: (value: number) => void;
+  size?: "small" | "medium";
+  disabled?: boolean;
 }
 
-const StarRating = ({ value = 0, onValueChange }: StarRatingProps) => {
+const StarRating = ({
+  value = 0,
+  onValueChange,
+  size = "medium",
+  disabled = false,
+}: StarRatingProps) => {
   const [hoveringValue, setHoveringValue] = useState<number>();
   return (
     <div className="flex justify-center">

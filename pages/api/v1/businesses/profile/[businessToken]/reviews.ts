@@ -6,7 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const {
       query: { businessToken, pageParam },
     } = req;
-    const reviews = await businessQuery.getReviews(businessToken + "", 2);
+    const reviews = await businessQuery.getReviews(businessToken + "");
     res.json({ success: true, reviews });
   } else if (req.method === "POST") {
     const {

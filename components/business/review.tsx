@@ -3,6 +3,7 @@ import { stringToEditorState } from "@/libs/client/editor";
 import { ExtendedBusinessReview } from "@/libs/server/business";
 import { Editor } from "draft-js";
 import { useState } from "react";
+import StarRating from "../starRating";
 
 interface ReviewProps {
   review: ExtendedBusinessReview;
@@ -13,6 +14,7 @@ const Review = ({
     user: { displayName },
     rawContent,
     createdAt,
+    rating,
   },
 }: ReviewProps) => {
   const [editorState, setEditorState] = useState(() =>
@@ -29,6 +31,9 @@ const Review = ({
         </div>
       </div>
       <div className="shrink-0">
+        <div>
+          <StarRating value={rating} disabled />
+        </div>
         <Editor
           editorState={editorState}
           readOnly={readOnly}
