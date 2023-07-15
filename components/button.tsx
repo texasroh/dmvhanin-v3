@@ -1,21 +1,24 @@
 import clsx from "clsx";
-import { ReactNode } from "react";
+import { ButtonHTMLAttributes } from "react";
 import LoadingSpinner from "./loadingSpinner";
 
-interface IButtonProps {
+interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
-  children?: ReactNode;
-  className?: string;
 }
-const Button = ({ className, children, isLoading = false }: IButtonProps) => {
+const Button = ({
+  className,
+  children,
+  isLoading = false,
+  disabled = false,
+}: IButtonProps) => {
   return (
     <button
       className={clsx(
         className || "",
         "flex w-full items-center justify-center rounded py-2 text-center font-medium text-white",
-        isLoading ? "bg-orange-300" : "bg-orange-500"
+        isLoading || disabled ? "bg-orange-300" : "bg-orange-500"
       )}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
     >
       {isLoading ? <LoadingSpinner /> : children}
     </button>

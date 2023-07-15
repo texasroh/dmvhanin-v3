@@ -34,6 +34,7 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
 
   const [emptySwitch, setEmptySwitch] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
+  const [hasText, setHasText] = useState(false);
 
   const { mutate, isLoading, data, error } = useMutation<
     PostReviewData,
@@ -66,6 +67,14 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
     setRatingValue(value);
   };
 
+  const onEditorChange = (
+    state: EditorState,
+    onChange: (...event: any[]) => void
+  ) => {
+    onChange(state);
+    setHasText(state.getCurrentContent().hasText());
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-2 md:flex-row">
@@ -74,7 +83,7 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
             render={({ field: { onChange } }) => (
               <DraftEditor
                 placeholder="Leave your comment here"
-                onChange={onChange}
+                onChange={(state) => onEditorChange(state, onChange)}
                 readonly={isLoading}
                 emptySwitch={emptySwitch}
               />
@@ -89,7 +98,9 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
             onValueChange={onValueChange}
             size="medium"
           />
-          <Button isLoading={isLoading}>Submit</Button>
+          <Button isLoading={isLoading} disabled={!hasText || !ratingValue}>
+            Submit
+          </Button>
         </div>
       </div>
     </form>

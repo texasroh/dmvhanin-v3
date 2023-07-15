@@ -31,7 +31,7 @@ const Review = ({
         </div>
       </div>
       <div className="shrink-0">
-        <div>
+        <div className="flex">
           <StarRating value={rating} disabled size="small" />
         </div>
         <Editor
