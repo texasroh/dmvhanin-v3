@@ -1,40 +1,42 @@
+import clsx from "clsx";
 import { useState } from "react";
-import StarIcon from "./starIcon";
+import StarIcon, { StarProps } from "./starIcon";
 
-interface StarRatingProps {
+interface StarRatingProps extends StarProps {
   value?: number;
   onValueChange?: (value: number) => void;
-  size?: "small" | "medium";
   disabled?: boolean;
 }
 
 const StarRating = ({
   value = 0,
   onValueChange,
-  size = "medium",
+  size,
   disabled = false,
 }: StarRatingProps) => {
   const [hoveringValue, setHoveringValue] = useState<number>();
   return (
     <div className="flex justify-center">
       {[1, 2, 3, 4, 5].map((v) => (
-        <button
+        <div
           key={v}
-          type="button"
+          className={clsx(disabled ? "select-none" : "cursor-pointer")}
           onClick={() => onValueChange?.(v)}
-          onMouseEnter={() => setHoveringValue(v)}
-          onMouseLeave={() => setHoveringValue(undefined)}
+          onMouseEnter={disabled ? undefined : () => setHoveringValue(v)}
+          onMouseLeave={
+            disabled ? undefined : () => setHoveringValue(undefined)
+          }
         >
           {hoveringValue ?? value ? (
             v <= (hoveringValue ?? value) ? (
-              <StarIcon.Fill />
+              <StarIcon.Fill size={size} />
             ) : (
-              <StarIcon.Empty />
+              <StarIcon.Empty size={size} />
             )
           ) : (
-            <StarIcon />
+            <StarIcon size={size} />
           )}
-        </button>
+        </div>
       ))}
     </div>
   );

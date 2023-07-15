@@ -84,7 +84,11 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
           />
         </div>
         <div className="w-full grow space-y-2 self-end">
-          <StarRating value={ratingValue} onValueChange={onValueChange} />
+          <StarRating
+            value={ratingValue}
+            onValueChange={onValueChange}
+            size="medium"
+          />
           <Button isLoading={isLoading}>Submit</Button>
         </div>
       </div>

@@ -32,7 +32,7 @@ const Review = ({
       </div>
       <div className="shrink-0">
         <div>
-          <StarRating value={rating} disabled />
+          <StarRating value={rating} disabled size="small" />
         </div>
         <Editor
           editorState={editorState}
