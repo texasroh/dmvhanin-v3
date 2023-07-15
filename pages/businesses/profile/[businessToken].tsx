@@ -2,21 +2,16 @@ import Review from "@/components/business/review";
 import ReviewForm from "@/components/business/reviewForm";
 import CustomImage from "@/components/customImage";
 import ImageSlider from "@/components/imageSlider";
-import LoadingSpinner from "@/components/loadingSpinner";
 import { BUSINESS_REVIEW_PER_PAGE } from "@/constants/numbers";
 import { useUser } from "@/hooks/useUser";
-import { businessAPI } from "@/libs/client/api/business";
 import { formatPhone } from "@/libs/client/number";
 import { ExtendedBusinessReview, businessQuery } from "@/libs/server/business";
 import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiMap } from "react-icons/bi";
 import { BsDot, BsGlobe, BsTelephone } from "react-icons/bs";
-import { useInView } from "react-intersection-observer";
 
 interface ExtendedBusiness extends Business {
   businessImages: BusinessImage[];
@@ -43,45 +38,6 @@ const BusinessDetail = ({
   totalReviewPage,
 }: IBusinessDetailProps) => {
   const { user } = useUser();
-  const currentReviewPage = useRef(1);
-  const { ref, inView } = useInView({ rootMargin: "30px" });
-  const { fetchNextPage, isFetchingNextPage } = useInfiniteQuery<any>(
-    ["businessReview", businessToken],
-    businessAPI.getReviews,
-    {
-      enabled: false,
-      getNextPageParam: (lastPage, allPages) => {
-        console.log("getNextPageParam");
-        return lastPage.page < lastPage.totalReviewPage
-          ? lastPage.page + 1
-          : undefined;
-      },
-      onSuccess: (newPageData) => {
-        console.log("onSuccess", newPageData);
-        // const lastPage = newPageData.pages[newPageData.pages.length - 1];
-        // if (!lastPage) return;
-
-        // setData([
-        //   ...businesses,
-        //   ...newPageData.pages.map((page) => page.businesses).flat(),
-        // ]);
-        // currentPage.current = lastPage.page;
-        // isLoading.current = false;
-      },
-    }
-  );
-
-  console.log("isFetchingNextPage", isFetchingNextPage);
-
-  useEffect(() => {
-    // console.log("inview");
-    if (inView && !isFetchingNextPage) {
-      // isLoading.current = true;
-      console.log("hello");
-      fetchNextPage();
-      console.log("done");
-    }
-  }, [inView]);
 
   return (
     <div className="space-y-8">
@@ -156,16 +112,7 @@ const BusinessDetail = ({
         )}
         <div className="mt-5">
           {reviews.length > 0 ? (
-            <>
-              {reviews.map((review, idx) => (
-                <Review review={review} key={idx} />
-              ))}
-              {currentReviewPage.current < totalReviewPage && (
-                <div className="flex justify-center" ref={ref}>
-                  <LoadingSpinner />
-                </div>
-              )}
-            </>
+            reviews.map((review, idx) => <Review review={review} key={idx} />)
           ) : (
             <p className="text-center text-sm font-bold text-gray-500">
               No reviews yet.

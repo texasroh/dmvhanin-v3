@@ -79,6 +79,7 @@ export const businessQuery = {
         createdAt: true,
         updatedAt: true,
         rawContent: true,
+        rating: true,
         user: {
           select: {
             displayName: true,

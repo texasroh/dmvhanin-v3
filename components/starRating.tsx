@@ -12,6 +12,7 @@ const StarRating = ({ value = 0, onValueChange }: StarRatingProps) => {
     <div className="flex justify-center">
       {[1, 2, 3, 4, 5].map((v) => (
         <button
+          key={v}
           type="button"
           onClick={() => onValueChange?.(v)}
           onMouseEnter={() => setHoveringValue(v)}
