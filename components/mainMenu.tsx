@@ -6,12 +6,12 @@ const MainMenu = () => {
       <li>
         <Link href={"/businesses"}>한인업소록</Link>
       </li>
-      <li>
+      {/* <li>
         <Link href={"/"}>중고거래</Link>
       </li>
       <li>
         <Link href={"/"}>구인구직</Link>
-      </li>
+      </li> */}
     </>
   );
 };
