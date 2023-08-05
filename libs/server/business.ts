@@ -29,7 +29,6 @@ export const businessQuery = {
         state: true,
         totalRating: true,
         totalReview: true,
-        avgRating: true,
         businessSubcategory: {
           select: {
             name: true,
