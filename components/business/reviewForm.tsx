@@ -1,5 +1,4 @@
 import { auth } from "@/fb/auth";
-import { useUser } from "@/hooks/useUser";
 import {
   PostReviewData,
   PostReviewError,
@@ -30,11 +29,12 @@ interface ReviewFormProps {
 }
 
 const ReviewForm = ({ businessToken }: ReviewFormProps) => {
-  const { user } = useUser();
-
   const [emptySwitch, setEmptySwitch] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
   const [hasText, setHasText] = useState(false);
+  const { handleSubmit, control, setValue, reset } = useForm<ReviewFormData>({
+    defaultValues: { review: EditorState.createEmpty(), rating: 0 },
+  });
 
   const { mutate, isLoading, data, error } = useMutation<
     PostReviewData,
@@ -43,12 +43,9 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
   >(businessAPI.postReview, {
     onSuccess: () => {
       setEmptySwitch((prev) => !prev);
+      setRatingValue(0);
     },
     onError: console.log,
-  });
-
-  const { handleSubmit, control, setValue } = useForm<ReviewFormData>({
-    defaultValues: { review: EditorState.createEmpty(), rating: 0 },
   });
 
   const onSubmit = ({ review, rating }: ReviewFormData) => {

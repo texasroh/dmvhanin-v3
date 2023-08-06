@@ -8,6 +8,7 @@ import { ExtendedBusinessReview, businessQuery } from "@/libs/server/business";
 import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
 import { NextPageContext } from "next";
 import Link from "next/link";
+import { useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiMap } from "react-icons/bi";
 import { BsDot, BsGlobe, BsTelephone } from "react-icons/bs";
@@ -36,6 +37,9 @@ const BusinessDetail = ({
   reviews,
 }: IBusinessDetailProps) => {
   const { user } = useUser();
+  const [rvs, setRvs] = useState(reviews);
+
+  const updateReviews = (lastId: number) => {};
 
   return (
     <div className="space-y-8">
@@ -109,7 +113,7 @@ const BusinessDetail = ({
           </div>
         )}
         <div className="mt-5">
-          {reviews.length > 0 ? (
+          {rvs.length > 0 ? (
             reviews.map((review, idx) => <Review review={review} key={idx} />)
           ) : (
             <p className="text-center text-sm font-bold text-gray-500">
