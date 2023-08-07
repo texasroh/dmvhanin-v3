@@ -73,6 +73,7 @@ export const businessQuery = {
   getReviews: (uuid: string) =>
     client.businessReview.findMany({
       select: {
+        id: true,
         createdAt: true,
         updatedAt: true,
         rawContent: true,

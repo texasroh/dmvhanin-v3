@@ -3,12 +3,14 @@ import ReviewForm from "@/components/business/reviewForm";
 import CustomImage from "@/components/customImage";
 import ImageSlider from "@/components/imageSlider";
 import { useUser } from "@/hooks/useUser";
+import { businessAPI } from "@/libs/client/api/business";
 import { formatPhone } from "@/libs/client/number";
 import { ExtendedBusinessReview, businessQuery } from "@/libs/server/business";
 import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { BiMap } from "react-icons/bi";
 import { BsDot, BsGlobe, BsTelephone } from "react-icons/bs";
@@ -39,7 +41,17 @@ const BusinessDetail = ({
   const { user } = useUser();
   const [rvs, setRvs] = useState(reviews);
 
-  const updateReviews = (lastId: number) => {};
+  const { isLoading, refetch, data } = useQuery(
+    ["businessReviews", businessToken],
+    businessAPI.getReviews,
+    { enabled: false }
+  );
+
+  useEffect(() => {
+    if (data) {
+      setRvs(data.reviews);
+    }
+  }, [data]);
 
   return (
     <div className="space-y-8">
@@ -102,7 +114,7 @@ const BusinessDetail = ({
       <div>
         <h3 className="py-3 text-lg font-bold">Reviews</h3>
         {user ? (
-          <ReviewForm businessToken={businessToken} />
+          <ReviewForm businessToken={businessToken} refetch={refetch} />
         ) : (
           <div className="rounded border border-gray-300 p-4 text-center text-gray-400">
             Please{" "}
@@ -114,7 +126,7 @@ const BusinessDetail = ({
         )}
         <div className="mt-5">
           {rvs.length > 0 ? (
-            reviews.map((review, idx) => <Review review={review} key={idx} />)
+            rvs.map((review, idx) => <Review review={review} key={review.id} />)
           ) : (
             <p className="text-center text-sm font-bold text-gray-500">
               No reviews yet.

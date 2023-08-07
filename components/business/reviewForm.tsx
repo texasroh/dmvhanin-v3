@@ -26,9 +26,10 @@ export interface ReviewFormData {
 
 interface ReviewFormProps {
   businessToken: string;
+  refetch: () => void;
 }
 
-const ReviewForm = ({ businessToken }: ReviewFormProps) => {
+const ReviewForm = ({ businessToken, refetch }: ReviewFormProps) => {
   const [emptySwitch, setEmptySwitch] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
   const [hasText, setHasText] = useState(false);
@@ -44,6 +45,7 @@ const ReviewForm = ({ businessToken }: ReviewFormProps) => {
     onSuccess: () => {
       setEmptySwitch((prev) => !prev);
       setRatingValue(0);
+      refetch();
     },
     onError: console.log,
   });

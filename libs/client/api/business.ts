@@ -3,7 +3,7 @@ import {
   GET_BUSINESS_REVIEWS,
   POST_BUSINESS_REVIEW,
 } from "@/constants/urls";
-import { BusinessReview } from "@prisma/client";
+import { ExtendedBusinessReview } from "@/libs/server/business";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
 import { sprintf } from "sprintf-js";
@@ -24,7 +24,7 @@ export interface PostReviewError {
 }
 
 interface GetReviews {
-  reviews: BusinessReview[];
+  reviews: ExtendedBusinessReview[];
 }
 
 export const businessAPI = {
@@ -48,9 +48,9 @@ export const businessAPI = {
       .then((response) => response.data)
       .catch(console.log);
   },
-  getReviews: ({ queryKey, pageParam = 2 }: QueryFunctionContext) => {
+  getReviews: ({ queryKey }: QueryFunctionContext) => {
     return axios
-      .get<GetReviews>(sprintf(GET_BUSINESS_REVIEWS, queryKey[1], pageParam))
+      .get<GetReviews>(sprintf(GET_BUSINESS_REVIEWS, queryKey[1]))
       .then((response) => response.data);
   },
 };
