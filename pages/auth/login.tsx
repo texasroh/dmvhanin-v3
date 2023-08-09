@@ -23,7 +23,7 @@ const Login = () => {
     if (user) {
       router.replace("/");
     }
-  }, [user]);
+  }, [user, router]);
 
   const onSubmit = ({ email }: ILoginForm) => {
     if (isSubmitting) return;

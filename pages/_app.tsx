@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
         resetAtoms();
       }
     });
-  }, []);
+  }, [resetAtoms, setUser]);
   return (
     <>
       <Head>

@@ -39,7 +39,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
     if (!categoryKor) {
       router.replace("/businesses");
     }
-  }, [categoryKor]);
+  }, [categoryKor, router]);
 
   const {
     data: fetchedData,
@@ -80,7 +80,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
       currentPage.current = 1;
       setData(businesses);
     }
-  }, [businesses]);
+  }, [businesses, fetchedData]);
 
   const { ref, inView } = useInView({
     rootMargin: "30px",
@@ -90,7 +90,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
     if (inView && !isFetching) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [inView, isFetching, fetchNextPage]);
 
   return (
     <div className="space-y-6">

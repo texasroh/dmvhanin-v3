@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import Image from "next/image";
 import { BsFillPersonFill } from "react-icons/bs";
 
 interface AvatarProps {
@@ -8,7 +9,7 @@ interface AvatarProps {
 }
 const Avatar = ({ photoURL, alt = "", size = "medium" }: AvatarProps) => {
   return photoURL ? (
-    <img
+    <Image
       src={photoURL}
       alt={alt}
       className={clsx("rounded-full", {

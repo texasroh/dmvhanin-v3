@@ -2,7 +2,7 @@ import { BUSINESS_PER_PAGE } from "@/constants/numbers";
 import { businessQuery } from "@/libs/server/business";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: { category, page },
   } = req;
@@ -24,3 +24,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   res.json({ page: pageInt, businesses, totalResult, totalPage });
 };
+
+export default handler;

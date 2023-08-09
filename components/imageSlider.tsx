@@ -18,7 +18,10 @@ const ImageSlider = ({ imgSrcs }: IImageSliderProps) => {
     <div className="slider-wrapper relative -m-2 aspect-square overflow-hidden bg-gray-200 sm:m-0 sm:aspect-video sm:rounded-lg">
       <motion.div className="flex h-full" animate={{ x: `-${index * 100}%` }}>
         {[1, 2, 3].map((ele, idx) => (
-          <div className="relative aspect-square h-full sm:aspect-video">
+          <div
+            className="relative aspect-square h-full sm:aspect-video"
+            key={idx}
+          >
             <div className="h-full w-full bg-blue-200"></div>
             <span className="magnifier absolute top-4 right-4 hidden rounded-lg bg-gray-700 p-1 opacity-50">
               <AiOutlineArrowsAlt color="white" size={24} />
@@ -30,6 +33,7 @@ const ImageSlider = ({ imgSrcs }: IImageSliderProps) => {
         <ul className="flex justify-center space-x-2">
           {[1, 2, 3].map((ele, idx) => (
             <li
+              key={idx}
               className={`h-2 w-2 rounded-full ${
                 index === idx ? "bg-white" : "bg-gray-400"
               }`}

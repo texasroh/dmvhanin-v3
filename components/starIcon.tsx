@@ -14,12 +14,14 @@ const StarIcon = ({ size }: StarProps) => {
   return <span className={clsx(starSize(size), "text-gray-300")}>☆</span>;
 };
 
-export default StarIcon;
-
-StarIcon.Fill = ({ size }: StarProps) => {
+const StarFill = ({ size }: StarProps) => {
   return <span className={clsx(starSize(size), "text-orange-400")}>★</span>;
 };
+StarIcon.Fill = StarFill;
 
-StarIcon.Empty = ({ size }: StarProps) => {
+const StarEmpty = ({ size }: StarProps) => {
   return <span className={clsx(starSize(size), "text-orange-400")}>☆</span>;
 };
+StarIcon.Empty = StarEmpty;
+
+export default StarIcon;
