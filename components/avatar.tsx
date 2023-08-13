@@ -12,10 +12,9 @@ const Avatar = ({ photoURL, alt = "", size = "medium" }: AvatarProps) => {
     <Image
       src={photoURL}
       alt={alt}
-      className={clsx("rounded-full", {
-        "h-8 w-8": size === "medium",
-        "h-24 w-24": size === "large",
-      })}
+      width={size === "medium" ? 32 : 96}
+      height={size === "medium" ? 32 : 96}
+      className={clsx("rounded-full", {})}
     />
   ) : (
     <div
