@@ -4,9 +4,11 @@ import { atomWithStorage } from "jotai/utils";
 import { useCallback } from "react";
 
 type User = {
+  uid: string | null;
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
+  businessOwner: boolean;
 };
 const USER_ATOM = "userAtom";
 export const userAtom = atomWithStorage<User | null>(USER_ATOM, null);

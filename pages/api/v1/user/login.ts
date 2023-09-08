@@ -1,34 +1,35 @@
-import client from "@/libs/server/client";
+import { userQuery } from "@/libs/server/user";
+import withHandler from "@/libs/server/withHandler";
+import { withApiSession } from "@/libs/server/withSession";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
+  try {
     const {
       body: {
         user: { uid, displayName, photoURL, email },
       },
     } = req;
-    try {
-      await client.user.upsert({
-        where: {
-          uid,
-        },
-        update: {
-          lastLogin: new Date(),
-        },
-        create: {
-          uid,
-          displayName,
-          photoURL,
-          email,
-        },
-      });
-      res.json({ success: true });
-    } catch (e) {
-      console.log(e);
-      res.status(400).json({ error: e });
-    }
+    const user = await userQuery.loginUser(uid, displayName, photoURL, email);
+    const userInfo = {
+      id: user.id,
+      photoURL: user.photoURL,
+      displayName: user.displayName,
+      businessOwner: user.businessOwner,
+    };
+    req.session.user = {
+      id: user.id,
+      uid: user.uid,
+    };
+    await req.session.save();
+
+    res.json({ success: true, userInfo });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: e });
   }
 };
 
-export default handler;
+export default withApiSession(
+  withHandler({ methods: ["POST"], handler, isPrivate: false })
+);

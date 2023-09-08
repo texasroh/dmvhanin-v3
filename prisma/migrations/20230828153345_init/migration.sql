@@ -68,6 +68,7 @@ CREATE TABLE "Business" (
     "totalRating" INTEGER NOT NULL DEFAULT 0,
     "totalReview" INTEGER NOT NULL DEFAULT 0,
     "avgRating" DECIMAL(3,2) NOT NULL DEFAULT 0,
+    "userId" INTEGER,
 
     CONSTRAINT "Business_pkey" PRIMARY KEY ("id")
 );
@@ -79,7 +80,7 @@ CREATE TABLE "BusinessReview" (
     "updatedAt" TIMESTAMPTZ(3) NOT NULL,
     "businessId" INTEGER NOT NULL,
     "rawContent" TEXT NOT NULL,
-    "reviewHTML" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "BusinessReview_pkey" PRIMARY KEY ("id")
@@ -105,6 +106,9 @@ ALTER TABLE "BusinessImage" ADD CONSTRAINT "BusinessImage_businessId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "Business" ADD CONSTRAINT "Business_businessSubcategoryId_fkey" FOREIGN KEY ("businessSubcategoryId") REFERENCES "BusinessSubcategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Business" ADD CONSTRAINT "Business_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BusinessReview" ADD CONSTRAINT "BusinessReview_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

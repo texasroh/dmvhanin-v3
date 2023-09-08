@@ -1,23 +1,12 @@
 import { actionCodeSettings, auth } from "@/fb/auth";
 import {
   GoogleAuthProvider,
-  User,
   isSignInWithEmailLink,
   sendSignInLinkToEmail,
   signInWithEmailLink,
   signInWithPopup,
 } from "firebase/auth";
 import { userAPI } from "./api/user";
-
-export const signInWithGoogle = async () => {
-  const googleAuthProvider = new GoogleAuthProvider();
-  try {
-    const userCredential = await signInWithPopup(auth, googleAuthProvider);
-    await updateLastLogin(userCredential.user);
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 export const sendSignInEmail = async (email: string) => {
   sendSignInLinkToEmail(auth, email, actionCodeSettings)
@@ -40,14 +29,20 @@ export const signInWithEmail = async (emailLink: string) => {
         email || "",
         emailLink
       );
-      await updateLastLogin(userCredential.user);
       window.localStorage.removeItem("emailForSignIn");
+      return userAPI.postUserLogin(userCredential.user);
     } catch (error) {
       console.log(error);
     }
   }
 };
 
-export const updateLastLogin = (user: User) => {
-  userAPI.postUserLogin(user);
+export const signInWithGoogle = async () => {
+  const googleAuthProvider = new GoogleAuthProvider();
+  try {
+    const userCredential = await signInWithPopup(auth, googleAuthProvider);
+    return userAPI.postUserLogin(userCredential.user);
+  } catch (err) {
+    console.log(err);
+  }
 };

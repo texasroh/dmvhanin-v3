@@ -6,6 +6,8 @@ const BASE_API_URL = "/api/v1";
  * Auth related URL
  */
 export const POST_USER_LOGIN = BASE_API_URL + "/user/login";
+export const POST_USER_LOGOUT = BASE_API_URL + "/user/logout";
+export const GET_USER_INFO = BASE_API_URL + "/user/%s";
 
 /**
  * Business related URL

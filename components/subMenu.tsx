@@ -1,7 +1,5 @@
-import { auth } from "@/fb/auth";
 import { useBackground } from "@/hooks/useBackground";
 import { useUser } from "@/hooks/useUser";
-import { signOut } from "firebase/auth";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,8 +11,8 @@ const SubMenu = () => {
   const router = useRouter();
 
   const signOutAction = async () => {
-    await signOut(auth);
-    router.push("/");
+    toggleBg();
+    router.push("/auth/logout");
   };
   return (
     <li>
@@ -29,7 +27,7 @@ const SubMenu = () => {
           <AnimatePresence>
             {bg && (
               <motion.div
-                className="absolute top-10 right-0 rounded border bg-white"
+                className="absolute right-0 top-10 rounded border bg-white"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -41,6 +39,14 @@ const SubMenu = () => {
                   >
                     Profile
                   </li>
+                  {user.businessOwner && (
+                    <li
+                      className="cursor-pointer px-4 py-2"
+                      onClick={() => router.push("/profile/business")}
+                    >
+                      Businesses
+                    </li>
+                  )}
                   <li
                     className="cursor-pointer px-4 py-2"
                     onClick={signOutAction}
