@@ -2,6 +2,7 @@ import Review from "@/components/business/review";
 import ReviewForm from "@/components/business/reviewForm";
 import CustomImage from "@/components/customImage";
 import ImageSlider from "@/components/imageSlider";
+import { LOGIN_PAGE } from "@/constants/urls";
 import { useUser } from "@/hooks/useUser";
 import { businessAPI } from "@/libs/client/api/business";
 import { formatPhone } from "@/libs/client/number";
@@ -118,7 +119,7 @@ const BusinessDetail = ({
         ) : (
           <div className="rounded border border-gray-300 p-4 text-center text-gray-400">
             Please{" "}
-            <Link href="/auth/login" className="underline">
+            <Link href={LOGIN_PAGE} className="underline">
               sign-in
             </Link>{" "}
             for leaving a comment.

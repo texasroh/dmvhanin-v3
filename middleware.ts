@@ -1,5 +1,6 @@
 import { getIronSession } from "iron-session/edge";
 import { NextRequest, NextResponse, userAgent } from "next/server";
+import { LOGIN_PAGE, LOGOUT_PAGE, PROFILE_PAGE } from "./constants/urls";
 
 export const middleware = async (request: NextRequest) => {
   if (userAgent(request).isBot) {
@@ -15,20 +16,20 @@ export const middleware = async (request: NextRequest) => {
     },
   });
 
-  if (session.user && request.nextUrl.pathname.startsWith("/auth/login")) {
+  if (session.user && request.nextUrl.pathname.startsWith(LOGIN_PAGE)) {
     request.nextUrl.searchParams.set("from", request.nextUrl.pathname);
-    request.nextUrl.pathname = "/auth/logout";
+    request.nextUrl.pathname = LOGOUT_PAGE;
     return NextResponse.redirect(request.nextUrl);
   }
 
-  if (!session.user && request.nextUrl.pathname.startsWith("/profile")) {
+  if (!session.user && request.nextUrl.pathname.startsWith(PROFILE_PAGE)) {
     request.nextUrl.searchParams.set("from", request.nextUrl.pathname);
-    request.nextUrl.pathname = "/auth/login";
+    request.nextUrl.pathname = LOGIN_PAGE;
     return NextResponse.redirect(request.nextUrl);
   }
 
-  if (!session.user && request.nextUrl.pathname.startsWith("/auth/logout")) {
-    request.nextUrl.pathname = "/auth/login";
+  if (!session.user && request.nextUrl.pathname.startsWith(LOGOUT_PAGE)) {
+    request.nextUrl.pathname = LOGOUT_PAGE;
     return NextResponse.redirect(request.nextUrl);
   }
 };

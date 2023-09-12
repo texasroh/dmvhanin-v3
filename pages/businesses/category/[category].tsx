@@ -1,6 +1,7 @@
 import CustomImage from "@/components/customImage";
 import LoadingSpinner from "@/components/loadingSpinner";
 import { BUSINESS_PER_PAGE } from "@/constants/numbers";
+import { BUSINESS_DETAIL_PAGE } from "@/constants/urls";
 import { businessAPI } from "@/libs/client/api/business";
 import { businessQuery } from "@/libs/server/business";
 import { Business, BusinessSubcategory } from "@prisma/client";
@@ -11,6 +12,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { BsChatText, BsDot, BsStar } from "react-icons/bs";
 import { useInView } from "react-intersection-observer";
+import { sprintf } from "sprintf-js";
 import { categories } from "..";
 
 interface IExtendedBusiness extends Business {
@@ -111,9 +113,13 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
         {data.map((business, idx) => (
           <div className="px-2" key={idx}>
             <Link
-              href={`/businesses/profile/${business.titleKor}-${business.uuid}`}
+              href={sprintf(
+                BUSINESS_DETAIL_PAGE,
+                business.titleKor,
+                business.uuid
+              )}
             >
-              <div className="flex space-x-4 border-b py-4 px-4">
+              <div className="flex space-x-4 border-b px-4 py-4">
                 <CustomImage
                   imgSrc={business.logoImageId}
                   alt={business.titleKor}
@@ -121,14 +127,14 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
                 />
                 <div className="space-y-1">
                   <div className="flex items-end gap-2">
-                    <div className="break-all line-clamp-1">
+                    <div className="line-clamp-1 break-all">
                       {business.titleKor}
                     </div>
                     <span className="shrink-0 text-sm font-medium text-gray-400">
                       {business.city}
                     </span>
                   </div>
-                  <div className="text-sm leading-4 line-clamp-2">
+                  <div className="line-clamp-2 text-sm leading-4">
                     {business.description}
                   </div>
                   <div className="flex items-center text-sm text-gray-500">

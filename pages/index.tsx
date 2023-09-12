@@ -1,3 +1,4 @@
+import { BUSINESS_MAIN_PAGE } from "@/constants/urls";
 import { NextPageContext } from "next";
 
 const Home = () => {
@@ -7,7 +8,7 @@ const Home = () => {
 export const getServerSideProps = (context: NextPageContext) => {
   return {
     redirect: {
-      destination: "/businesses",
+      destination: BUSINESS_MAIN_PAGE,
     },
   };
 };

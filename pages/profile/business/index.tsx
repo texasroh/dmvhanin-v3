@@ -1,3 +1,4 @@
+import { BUSINESS_CREATION_PAGE, MAIN_PAGE } from "@/constants/urls";
 import { profileQuery } from "@/libs/server/profile";
 import { withSsrSession } from "@/libs/server/withSession";
 import { Business } from "@prisma/client";
@@ -23,7 +24,7 @@ export const getServerSideProps = withSsrSession(
     if (!uid) {
       return {
         redirect: {
-          destination: "/",
+          destination: MAIN_PAGE,
         },
       };
     }
@@ -32,7 +33,7 @@ export const getServerSideProps = withSsrSession(
     if (businesses.length == 0)
       return {
         redirect: {
-          destination: "/profile/business/new",
+          destination: BUSINESS_CREATION_PAGE,
         },
       };
     return { props: { businesses } };

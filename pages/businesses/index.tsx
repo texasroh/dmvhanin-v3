@@ -1,3 +1,4 @@
+import { BUSINESS_CATEGORY_PAGE } from "@/constants/urls";
 import amenities from "@/images/business-category/amenities.png";
 import beauty from "@/images/business-category/beauty.png";
 import car from "@/images/business-category/car.png";
@@ -12,6 +13,7 @@ import study from "@/images/business-category/study.png";
 import travel from "@/images/business-category/travel.png";
 import Image from "next/image";
 import Link from "next/link";
+import { sprintf } from "sprintf-js";
 
 export const categories = [
   { key: "restaurant", label: "식당", imgSrc: restaurant },
@@ -33,7 +35,7 @@ const BusinessIndex = () => {
     <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4">
       {categories.map((category) => (
         <div key={category.key} className="p-4">
-          <Link href={`/businesses/category/${category.key}`}>
+          <Link href={sprintf(BUSINESS_CATEGORY_PAGE, category.key)}>
             <Image
               src={category.imgSrc}
               alt={category.key}

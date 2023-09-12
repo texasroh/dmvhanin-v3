@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../images/short-logo.png";
 import MainMenu from "./mainMenu";
-import SubMenu from "./subMenu";
+import ProfileMenu from "./profileMenu";
 
 const TinyHeader = () => {
   return (
@@ -16,7 +16,7 @@ const TinyHeader = () => {
         </ul>
       </div>
       <ul className="flex space-x-6 text-lg font-bold text-gray-600">
-        <SubMenu />
+        <ProfileMenu />
       </ul>
     </header>
   );

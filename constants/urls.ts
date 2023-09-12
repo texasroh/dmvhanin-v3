@@ -17,3 +17,17 @@ export const GET_BUSINESSES = BASE_API_URL + "/businesses/%s?page=%d";
 export const POST_BUSINESS_REVIEW =
   BASE_API_URL + "/businesses/profile/%s/reviews";
 export const GET_BUSINESS_REVIEWS = POST_BUSINESS_REVIEW;
+
+/**
+ * Page URLs
+ */
+
+export const MAIN_PAGE = "/";
+export const LOGIN_PAGE = "/auth/login";
+export const LOGOUT_PAGE = "/auth/logout";
+export const PROFILE_PAGE = "/profile";
+export const BUSINESS_OWNER_PAGE = "/profile/business";
+export const BUSINESS_MAIN_PAGE = "/businesses";
+export const BUSINESS_CATEGORY_PAGE = "/businesses/category/%s";
+export const BUSINESS_DETAIL_PAGE = "/businesses/profile/%s-%s";
+export const BUSINESS_CREATION_PAGE = "/profile/business/new";
