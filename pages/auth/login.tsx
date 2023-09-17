@@ -52,7 +52,7 @@ const Login = () => {
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
-          <Input label="Email" {...register("email")} type="email" />
+          <Input label="Email" {...register("email")} type="email" id="email" />
           <div className="overflow-hidden rounded-full">
             <Button>Continue with email</Button>
           </div>

@@ -11,13 +11,13 @@ import { EditorState } from "draft-js";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "../button";
-import DraftEditor from "../draftEditor";
+// import DraftEditor from "../draftEditor";
+import dynamic from "next/dynamic";
 import StarRating from "../starRating";
-// import dynamic from "next/dynamic";
 
-// const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
-//   ssr: false,
-// });
+const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
+  ssr: false,
+});
 
 export interface ReviewFormData {
   review: EditorState;

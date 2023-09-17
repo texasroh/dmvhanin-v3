@@ -1,19 +1,27 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { InputHTMLAttributes, forwardRef, useState } from "react";
+import { InputHTMLAttributes, forwardRef, useEffect, useState } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, type = "text", ...props }, ref) => {
+  ({ id, className, label, type = "text", ...props }, ref) => {
+    const [inputId, setInputId] = useState(id);
+    useEffect(() => {
+      if (!id) {
+        setInputId(Math.random().toString(36).substring(2, 7));
+      }
+    }, []);
+
     const [isFocus, setIsFocus] = useState(false);
     const [value, setValue] = useState<string>((props.value as string) || "");
     return (
       <div className="relative w-full">
         <input
           {...props}
+          id={inputId}
           ref={ref}
           className={clsx(
             "h-10 w-full rounded border border-gray-400 bg-transparent px-4 outline-orange-300",
@@ -38,12 +46,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {label}
           </motion.span>
         ) : (
-          <motion.span
+          <motion.label
+            htmlFor={inputId}
             layoutId={label}
-            className="absolute left-2 top-2 bg-white px-2 text-gray-400"
+            className="absolute left-2 top-2 select-text bg-white px-2 text-gray-400"
           >
             {label}
-          </motion.span>
+          </motion.label>
         )}
       </div>
     );

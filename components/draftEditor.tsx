@@ -53,19 +53,10 @@ const DraftEditor = ({
   }, [emptySwitch]);
 
   return (
-    <div className="space-y-4 rounded border p-4" onClick={focus}>
-      <Editor
-        editorState={editorState}
-        onChange={(state) => {
-          setEditorState(state);
-          onChange?.(state);
-        }}
-        handleKeyCommand={handleKeyCommand}
-        plugins={[staticToolbarPlugin]}
-        ref={editorRef}
-        placeholder={placeholder}
-        readOnly={readonly}
-      />
+    <div
+      className="relative h-auto space-y-4 rounded border border-gray-400 p-4"
+      onClick={focus}
+    >
       <Toolbar>
         {(externalProps) => (
           <div>
@@ -77,6 +68,20 @@ const DraftEditor = ({
           </div>
         )}
       </Toolbar>
+      <div className="h-24 overflow-y-scroll">
+        <Editor
+          editorState={editorState}
+          onChange={(state) => {
+            setEditorState(state);
+            onChange?.(state);
+          }}
+          handleKeyCommand={handleKeyCommand}
+          plugins={[staticToolbarPlugin]}
+          ref={editorRef}
+          placeholder={placeholder}
+          readOnly={readonly}
+        />
+      </div>
     </div>
   );
 };

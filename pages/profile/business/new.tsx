@@ -1,8 +1,11 @@
+import BusinessForm from "@/components/business/businessForm";
+import { Title } from "@/components/text";
+
 const CreateBusiness = () => {
   return (
     <div>
-      <h1 className="text-lg">새 업소등록하기</h1>
-      <div></div>
+      <Title>새 업소등록하기</Title>
+      <BusinessForm />
     </div>
   );
 };
