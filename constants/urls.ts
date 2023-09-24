@@ -12,11 +12,13 @@ export const GET_USER_INFO = BASE_API_URL + "/user/%s";
 /**
  * Business related URL
  */
-
-export const GET_BUSINESSES = BASE_API_URL + "/businesses/%s?page=%d";
+export const POST_BUSINESS = BASE_API_URL + "/businesses";
+export const GET_BUSINESSES = BASE_API_URL + "/businesses/category/%s?page=%d";
 export const POST_BUSINESS_REVIEW =
   BASE_API_URL + "/businesses/profile/%s/reviews";
 export const GET_BUSINESS_REVIEWS = POST_BUSINESS_REVIEW;
+export const GET_CATEGORIES = BASE_API_URL + "/businesses/category";
+export const GET_SUBCATEGORIES = GET_CATEGORIES + "?sub=true";
 
 /**
  * Page URLs

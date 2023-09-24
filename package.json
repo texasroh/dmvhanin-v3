@@ -35,14 +35,17 @@
     "react-hook-form": "^7.43.0",
     "react-icons": "^4.7.1",
     "react-intersection-observer": "^9.4.1",
+    "react-select": "^5.7.5",
     "sass": "^1.57.1",
     "sprintf-js": "^1.1.2",
-    "typescript": "4.9.4"
+    "typescript": "4.9.4",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/draft-js": "^0.11.11",
     "@types/draftjs-to-html": "^0.8.1",
     "@types/sprintf-js": "^1.1.2",
+    "@types/uuid": "^9.0.4",
     "autoprefixer": "^10.4.13",
     "css-loader": "^6.8.1",
     "postcss": "^8.4.21",

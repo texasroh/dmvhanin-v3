@@ -1,5 +1,7 @@
 import { BUSINESS_PER_PAGE } from "@/constants/numbers";
 import { BusinessReview, Prisma, User } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
+import { charNumOnly } from "../common/utils";
 import client from "./client";
 
 export interface ExtendedBusinessReview extends BusinessReview {
@@ -60,6 +62,51 @@ export const businessQuery = {
       take: BUSINESS_PER_PAGE,
       skip: (page - 1) * BUSINESS_PER_PAGE,
     }),
+  postBusiness: async (
+    uid: string,
+    titleKor: string,
+    titleEng: string,
+    businessSubcategory: number,
+    description: string | null,
+    address: string | null,
+    city: string | null,
+    state: string | null,
+    zipcode: string | null,
+    phone: string | null,
+    email: string | null,
+    website: string | null
+  ) => {
+    let uuid;
+    let business;
+    do {
+      uuid = charNumOnly(uuidv4());
+      business = await client.business.findUnique({
+        select: {
+          id: true,
+        },
+        where: {
+          uuid,
+        },
+      });
+    } while (business);
+    return client.business.create({
+      data: {
+        uuid,
+        titleKor,
+        titleEng,
+        businessSubcategory: { connect: { id: businessSubcategory } },
+        description,
+        address: address || null,
+        city: city || null,
+        state: state || null,
+        zipcode: zipcode || null,
+        phone: phone || null,
+        email: email || null,
+        website: website || null,
+        user: { connect: { uid } },
+      },
+    });
+  },
   getTotalBusinessCount: (category: string) =>
     client.business.count({
       where: {

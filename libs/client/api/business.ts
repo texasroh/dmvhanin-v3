@@ -1,6 +1,8 @@
 import {
   GET_BUSINESSES,
   GET_BUSINESS_REVIEWS,
+  GET_SUBCATEGORIES,
+  POST_BUSINESS,
   POST_BUSINESS_REVIEW,
 } from "@/constants/urls";
 import { ExtendedBusinessReview } from "@/libs/server/business";
@@ -15,6 +17,8 @@ export interface PostReviewVariable {
   rating: number;
 }
 
+export interface PostBusinessVariable {}
+
 export interface PostReviewData {
   success: boolean;
 }
@@ -25,6 +29,14 @@ export interface PostReviewError {
 
 interface GetReviews {
   reviews: ExtendedBusinessReview[];
+}
+
+interface GetSubcategory {
+  id: number;
+  name: string;
+  businessCategory: {
+    key: string;
+  };
 }
 
 export const businessAPI = {
@@ -51,6 +63,16 @@ export const businessAPI = {
   getReviews: ({ queryKey }: QueryFunctionContext) => {
     return axios
       .get<GetReviews>(sprintf(GET_BUSINESS_REVIEWS, queryKey[1]))
+      .then((response) => response.data);
+  },
+  postBusiness: (data: PostBusinessVariable) => {
+    return axios
+      .post(POST_BUSINESS, { data })
+      .then((response) => response.data);
+  },
+  getSubcategories: () => {
+    return axios
+      .get<GetSubcategory[]>(GET_SUBCATEGORIES)
       .then((response) => response.data);
   },
 };

@@ -11,13 +11,14 @@ import { EditorState } from "draft-js";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Button from "../button";
-// import DraftEditor from "../draftEditor";
-import dynamic from "next/dynamic";
+import DraftEditor from "../draftEditor";
+// import dynamic from "next/dynamic";
+import NoSsr from "../noSsr";
 import StarRating from "../starRating";
 
-const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
-  ssr: false,
-});
+// const DraftEditor = dynamic(() => import("@/components/draftEditor"), {
+//   ssr: false,
+// });
 
 export interface ReviewFormData {
   review: EditorState;
@@ -78,18 +79,20 @@ const ReviewForm = ({ businessToken, refetch }: ReviewFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-2 md:flex-row">
         <div className="shrink-0 md:w-4/5">
-          <Controller
-            render={({ field: { onChange } }) => (
-              <DraftEditor
-                placeholder="Leave your comment here"
-                onChange={(state) => onEditorChange(state, onChange)}
-                readonly={isLoading}
-                emptySwitch={emptySwitch}
-              />
-            )}
-            name="review"
-            control={control}
-          />
+          <NoSsr>
+            <Controller
+              render={({ field: { onChange } }) => (
+                <DraftEditor
+                  placeholder="Leave your comment here"
+                  onChange={(state) => onEditorChange(state, onChange)}
+                  readonly={isLoading}
+                  emptySwitch={emptySwitch}
+                />
+              )}
+              name="review"
+              control={control}
+            />
+          </NoSsr>
         </div>
         <div className="w-full grow space-y-2 self-end">
           <StarRating

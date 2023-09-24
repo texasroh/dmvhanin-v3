@@ -57,7 +57,7 @@ model BusinessImage {
 
 model Business {
   id                    Int                 @id @default(autoincrement())
-  uuid                  String?             @unique @db.VarChar(32)
+  uuid                  String              @unique @db.VarChar(32)
   logoImageId           String?
   createdAt             DateTime            @default(now()) @db.Timestamptz(3)
   updatedAt             DateTime            @updatedAt @db.Timestamptz(3)
