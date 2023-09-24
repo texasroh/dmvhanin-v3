@@ -25,4 +25,26 @@ const Button = ({
   );
 };
 
+const WhiteButton = ({
+  className,
+  children,
+  isLoading = false,
+  disabled = false,
+}: IButtonProps) => {
+  return (
+    <button
+      className={clsx(
+        className || "",
+        "flex w-full items-center justify-center rounded border border-orange-500 py-2 text-center font-medium text-orange-500",
+        { "bg-gray-100": isLoading || disabled }
+      )}
+      disabled={isLoading || disabled}
+    >
+      {isLoading ? <LoadingSpinner /> : children}
+    </button>
+  );
+};
+
+Button.white = WhiteButton;
+
 export default Button;
