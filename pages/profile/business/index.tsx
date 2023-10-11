@@ -1,10 +1,15 @@
 import Button from "@/components/button";
-import { BUSINESS_CREATION_PAGE, MAIN_PAGE } from "@/constants/urls";
+import {
+  BUSINESS_CREATION_PAGE,
+  BUSINESS_OWNER_DETAIL_PAGE,
+  MAIN_PAGE,
+} from "@/constants/urls";
 import { profileQuery } from "@/libs/server/profile";
 import { withSsrSession } from "@/libs/server/withSession";
 import { Business } from "@prisma/client";
 import { NextPageContext } from "next";
 import Link from "next/link";
+import { sprintf } from "sprintf-js";
 
 interface BusinessesProps {
   businesses: Business[];
@@ -24,9 +29,14 @@ const Businesses = ({ businesses }: BusinessesProps) => {
       </div>
       <div className="mt-2 space-y-2">
         {businesses.map((business, idx) => (
-          <div key={idx} className="rounded border border-gray-300 px-4 py-2">
-            {business.titleKor}
-          </div>
+          <Link
+            key={idx}
+            href={sprintf(BUSINESS_OWNER_DETAIL_PAGE, business.uuid)}
+          >
+            <div className="rounded border border-gray-300 px-4 py-2">
+              {business.titleKor}
+            </div>
+          </Link>
         ))}
       </div>
     </div>

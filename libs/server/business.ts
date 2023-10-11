@@ -1,5 +1,13 @@
 import { BUSINESS_PER_PAGE } from "@/constants/numbers";
-import { BusinessReview, Prisma, User } from "@prisma/client";
+import {
+  Business,
+  BusinessCategory,
+  BusinessImage,
+  BusinessReview,
+  BusinessSubcategory,
+  Prisma,
+  User,
+} from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { charNumOnly } from "../common/utils";
 import client from "./client";
@@ -8,12 +16,24 @@ export interface ExtendedBusinessReview extends BusinessReview {
   user: User;
 }
 
+interface BusinessSubcategoryWithCategory extends BusinessSubcategory {
+  businessCategory: BusinessCategory;
+}
+export interface GetDetailBusiness extends Business {
+  businessImage: BusinessImage[];
+  businessSubcategory: BusinessSubcategoryWithCategory;
+}
+
 export const businessQuery = {
   getBusiness: (uuid: string) =>
     client.business.findUnique({
       include: {
         businessImages: true,
-        businessSubcategory: true,
+        businessSubcategory: {
+          include: {
+            businessCategory: true,
+          },
+        },
       },
       where: {
         uuid,

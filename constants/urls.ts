@@ -29,6 +29,7 @@ export const LOGIN_PAGE = "/auth/login";
 export const LOGOUT_PAGE = "/auth/logout";
 export const PROFILE_PAGE = "/profile";
 export const BUSINESS_OWNER_PAGE = "/profile/business";
+export const BUSINESS_OWNER_DETAIL_PAGE = "/profile/business/%s";
 export const BUSINESS_MAIN_PAGE = "/businesses";
 export const BUSINESS_CATEGORY_PAGE = "/businesses/category/%s";
 export const BUSINESS_DETAIL_PAGE = "/businesses/profile/%s-%s";
