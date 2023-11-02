@@ -38,7 +38,7 @@ const Login = () => {
   const googleLogin = () => {
     setLoading(true);
     signInWithGoogle()
-      .then((response) => setUser(response.userInfo))
+      .then((response) => setUser(response?.userInfo || null))
       .finally(() => setLoading(false));
   };
 

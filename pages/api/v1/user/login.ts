@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } = req;
     const user = await userQuery.loginUser(uid, displayName, photoURL, email);
     const userInfo = {
-      id: user.id,
+      email: user.email,
       photoURL: user.photoURL,
       displayName: user.displayName,
       businessOwner: user.businessOwner,

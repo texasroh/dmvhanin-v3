@@ -1,35 +1,16 @@
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-import { useCallback } from "react";
-
-type User = {
-  uid: string | null;
+export interface UserInfo {
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
   businessOwner: boolean;
-};
+}
 const USER_ATOM = "userAtom";
-export const userAtom = atomWithStorage<User | null>(USER_ATOM, null);
+export const userAtom = atomWithStorage<UserInfo | null>(USER_ATOM, null);
 
 export const useUser = () => {
   const [user, setUser] = useAtom(userAtom);
-  const updateUser = useCallback(
-    (newValue: User | null) => {
-      if (newValue === null) {
-        setUser(newValue);
-      } else {
-        setUser((prev) => {
-          if (prev) {
-            return { ...prev, ...newValue };
-          } else {
-            return newValue;
-          }
-        });
-      }
-    },
-    [setUser]
-  );
-  return { user, setUser: updateUser };
+  return { user, setUser };
 };

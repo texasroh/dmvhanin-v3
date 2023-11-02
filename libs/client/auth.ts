@@ -44,5 +44,6 @@ export const signInWithGoogle = async () => {
     return userAPI.postUserLogin(userCredential.user);
   } catch (err) {
     console.log(err);
+    return null;
   }
 };
