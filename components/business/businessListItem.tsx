@@ -1,3 +1,4 @@
+import { extractTextFromString } from "@/libs/client/editor";
 import { IExtendedBusiness } from "@/pages/businesses/category/[category]";
 import { BsChatText, BsDot, BsStar } from "react-icons/bs";
 import CustomImage from "../customImage";
@@ -7,6 +8,12 @@ interface BusinessListItemProps {
 }
 
 const BusinessListItem = ({ business }: BusinessListItemProps) => {
+  let description;
+  try {
+    description = extractTextFromString(business.description || "");
+  } catch {
+    description = business.description;
+  }
   return (
     <div className="flex h-full gap-4 border-b py-3">
       <div className="shrink-0">
@@ -24,7 +31,7 @@ const BusinessListItem = ({ business }: BusinessListItemProps) => {
           </span>
         </div>
         <div className="line-clamp-2 overflow-hidden text-sm leading-4">
-          {business.description}
+          {description}
         </div>
         <div className="flex items-center text-sm text-gray-500">
           <BsChatText />
