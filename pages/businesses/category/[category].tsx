@@ -1,4 +1,4 @@
-import CustomImage from "@/components/customImage";
+import BusinessListItem from "@/components/business/businessListItem";
 import LoadingSpinner from "@/components/loadingSpinner";
 import { BUSINESS_PER_PAGE } from "@/constants/numbers";
 import { BUSINESS_DETAIL_PAGE } from "@/constants/urls";
@@ -10,12 +10,11 @@ import { NextPageContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { BsChatText, BsDot, BsStar } from "react-icons/bs";
 import { useInView } from "react-intersection-observer";
 import { sprintf } from "sprintf-js";
 import { categories } from "..";
 
-interface IExtendedBusiness extends Business {
+export interface IExtendedBusiness extends Business {
   businessSubcategory: BusinessSubcategory;
 }
 
@@ -119,41 +118,7 @@ const CategoryIndex = ({ businesses, totalPage }: ICategoryIndexProps) => {
                 business.uuid
               )}
             >
-              <div className="flex space-x-4 border-b px-4 py-4">
-                <CustomImage
-                  imgSrc={business.logoImageId}
-                  alt={business.titleKor}
-                  circle
-                />
-                <div className="space-y-1">
-                  <div className="flex items-end gap-2">
-                    <div className="line-clamp-1 break-all">
-                      {business.titleKor}
-                    </div>
-                    <span className="shrink-0 text-sm font-medium text-gray-400">
-                      {business.city}
-                    </span>
-                  </div>
-                  <div className="line-clamp-2 text-sm leading-4">
-                    {business.description}
-                  </div>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <BsChatText />
-                    <div className="ml-1">{business.totalReview}</div>
-                    <div className="mx-2">
-                      <BsDot />
-                    </div>
-                    <BsStar />
-                    <div className="ml-1">
-                      <>{business.avgRating}</>
-                    </div>
-                    <div className="mx-2">
-                      <BsDot />
-                    </div>
-                    <div>{business.businessSubcategory.name}</div>
-                  </div>
-                </div>
-              </div>
+              <BusinessListItem business={business} />
             </Link>
           </div>
         ))}

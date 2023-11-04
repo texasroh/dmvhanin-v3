@@ -11,7 +11,7 @@ const CustomImage = ({ imgSrc, alt, circle = false }: ICustomImageProps) => {
     <div
       className={`${
         circle ? "rounded-full" : "rounded"
-      } flex h-[4.5rem] w-[4.5rem] shrink-0 items-center justify-center overflow-hidden bg-gray-300 object-cover`}
+      } flex h-[4.5rem] w-[4.5rem] items-center justify-center overflow-hidden bg-gray-300 object-cover`}
     >
       {imgSrc ? (
         <Image src={imgSrc} alt={alt} />

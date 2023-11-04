@@ -9,3 +9,5 @@ export const editorStateToHTML = (editorState: EditorState) =>
   draftToHtml(editorStateToObject(editorState));
 export const stringToEditorState = (raw: string) =>
   EditorState.createWithContent(convertFromRaw(JSON.parse(raw)));
+export const extractTextFromString = (raw: string) =>
+  stringToEditorState(raw).getCurrentContent().getPlainText();

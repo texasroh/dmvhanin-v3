@@ -4,7 +4,7 @@ import { useUser } from "@/hooks/useUser";
 import { sendSignInEmail, signInWithGoogle } from "@/libs/client/auth";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaGooglePlusG } from "react-icons/fa";
 
@@ -12,7 +12,6 @@ interface ILoginForm {
   email: string;
 }
 const Login = () => {
-  const [loading, setLoading] = useState(false);
   const { setUser } = useUser();
   const {
     register,
@@ -36,15 +35,10 @@ const Login = () => {
   };
 
   const googleLogin = () => {
-    setLoading(true);
-    signInWithGoogle()
-      .then((response) => setUser(response?.userInfo || null))
-      .finally(() => setLoading(false));
+    signInWithGoogle().then((response) => setUser(response?.userInfo || null));
   };
 
-  return loading ? (
-    <div>Logging in..</div>
-  ) : (
+  return (
     <div className="mx-auto max-w-[400px]">
       <h1 className="text-center text-xl font-medium">로그인하기</h1>
       <p className="my-12 text-center text-sm">
