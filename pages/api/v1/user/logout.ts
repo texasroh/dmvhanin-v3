@@ -7,4 +7,6 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
   res.status(201).end();
 };
 
-export default withApiSession(withHandler({ methods: ["POST"], handler }));
+export default withApiSession(
+  withHandler({ methods: ["POST"], handler, isPrivate: false })
+);
