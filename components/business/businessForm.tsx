@@ -1,6 +1,7 @@
 import { BUSINESS_OWNER_PAGE } from "@/constants/urls";
 import { businessAPI } from "@/libs/client/api/business";
-import { editorStateToString } from "@/libs/client/editor";
+import { stringToEditorState } from "@/libs/client/editor";
+import { GetDetailBusiness } from "@/libs/server/business";
 import { categories } from "@/pages/businesses";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { EditorState } from "draft-js";
@@ -12,6 +13,7 @@ import Button from "../button";
 import { HorizontalDivider } from "../divider";
 import DraftEditor from "../draftEditor";
 import Input from "../input";
+import NoSsr from "../noSsr";
 import { Subtitle } from "../text";
 
 export interface BusinessFormData {
@@ -29,8 +31,29 @@ export interface BusinessFormData {
   email: string;
 }
 
-const BusinessForm = () => {
-  const { register, handleSubmit, control } = useForm<BusinessFormData>();
+interface BusinessFormProps {
+  business?: GetDetailBusiness;
+}
+
+const BusinessForm = ({ business }: BusinessFormProps) => {
+  const defaultValues = {
+    category: business?.businessSubcategory.businessCategory.name || "",
+    // subcategory: number;
+    titleKor: business?.titleKor || "",
+    titleEng: business?.titleEng || "",
+    description: business && stringToEditorState(business?.description || ""),
+    // address: string;
+    // city: string;
+    // zipcode: string;
+    // state: string;
+    // phone: string;
+    // website: string;
+    // email: string;
+  };
+  console.log(defaultValues);
+  const { register, handleSubmit, control } = useForm<BusinessFormData>({
+    defaultValues,
+  });
   const router = useRouter();
   const { mutate, isLoading: isMutating } = useMutation(
     businessAPI.postBusiness,
@@ -63,106 +86,112 @@ const BusinessForm = () => {
   };
 
   const onSubmit = (data: BusinessFormData) => {
-    mutate({ ...data, description: editorStateToString(data.description) });
+    console.log(data);
+    // mutate({ ...data, description: editorStateToString(data.description) });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mt-4 space-y-4">
-        <div className="flex flex-col gap-4 md:flex-row">
-          <Input
-            label="Title Kor"
-            required
-            {...register("titleKor", { required: true })}
+    <NoSsr>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mt-4 space-y-4">
+          <div className="flex flex-col gap-4 md:flex-row">
+            <Input
+              label="Title Kor"
+              required
+              value={defaultValues.titleKor}
+              {...register("titleKor", { required: true })}
+            />
+            <Input
+              label="Title Eng"
+              required
+              value={defaultValues.titleEng}
+              {...register("titleEng", { required: true })}
+            />
+          </div>
+          <Controller
+            render={({ field: { onChange } }) => (
+              <DraftEditor
+                placeholder="Description"
+                onChange={(state) => onChange(state)}
+                // value={}
+              />
+            )}
+            name="description"
+            control={control}
           />
-          <Input
-            label="Title Eng"
-            required
-            {...register("titleEng", { required: true })}
-          />
-        </div>
-        <Controller
-          render={({ field: { onChange } }) => (
-            <DraftEditor
-              placeholder="Description"
-              onChange={(state) => onChange(state)}
-            />
-          )}
-          name="description"
-          control={control}
-        />
-        <HorizontalDivider />
-        <Subtitle>분류</Subtitle>
-        <div className="flex flex-col gap-4 md:flex-row">
-          <div className="w-full">
-            <Select
-              options={categories.map((category) => ({
-                value: category.key,
-                label: category.label,
-              }))}
-              isSearchable={false}
-              placeholder="대분류 선택"
-              onChange={(selectedItem) =>
-                filterSubCategories(selectedItem?.value ?? "")
-              }
-            />
+          <HorizontalDivider />
+          <Subtitle>분류</Subtitle>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="w-full">
+              <Select
+                options={categories.map((category) => ({
+                  value: category.key,
+                  label: category.label,
+                }))}
+                isSearchable={false}
+                placeholder="대분류 선택"
+                onChange={(selectedItem) =>
+                  filterSubCategories(selectedItem?.value ?? "")
+                }
+              />
+            </div>
+            <div className="w-full">
+              <Controller
+                render={({ field: { onChange } }) => (
+                  <Select
+                    options={subCategories?.map((subCategory) => ({
+                      value: subCategory.id,
+                      label: subCategory.name,
+                    }))}
+                    placeholder="소분류 선택"
+                    required
+                    onChange={(selected_item) => onChange(selected_item?.value)}
+                  />
+                )}
+                name="subcategory"
+                control={control}
+                rules={{ required: true }}
+              />
+            </div>
           </div>
-          <div className="w-full">
-            <Controller
-              render={({ field: { onChange } }) => (
-                <Select
-                  options={subCategories?.map((subCategory) => ({
-                    value: subCategory.id,
-                    label: subCategory.name,
-                  }))}
-                  placeholder="소분류 선택"
-                  required
-                  onChange={(selected_item) => onChange(selected_item?.value)}
-                />
-              )}
-              name="subcategory"
-              control={control}
-              rules={{ required: true }}
-            />
+          <HorizontalDivider />
+          <Subtitle>Address</Subtitle>
+          <Input label="Street Address" {...register("address")} />
+          <div className="flex flex-col gap-4 md:flex-row">
+            <Input label="City" {...register("city")} />
+            <Input label="Zipcode" {...register("zipcode")} />
+            {/* <Input label="State" {...register("state")} /> */}
+            <div className="w-full">
+              <Controller
+                render={({ field: { onChange } }) => (
+                  <Select
+                    options={["VA", "MD", "DC"].map((state) => ({
+                      label: state,
+                      value: state,
+                    }))}
+                    placeholder="State"
+                    onChange={(selected_item) => onChange(selected_item?.value)}
+                  />
+                )}
+                name="state"
+                control={control}
+              />
+            </div>
           </div>
-        </div>
-        <HorizontalDivider />
-        <Subtitle>Address</Subtitle>
-        <Input label="Street Address" {...register("address")} />
-        <div className="flex flex-col gap-4 md:flex-row">
-          <Input label="City" {...register("city")} />
-          <Input label="Zipcode" {...register("zipcode")} />
-          {/* <Input label="State" {...register("state")} /> */}
-          <div className="w-full">
-            <Controller
-              render={({ field: { onChange } }) => (
-                <Select
-                  options={["VA", "MD", "DC"].map((state) => ({
-                    label: state,
-                    value: state,
-                  }))}
-                  placeholder="State"
-                  onChange={(selected_item) => onChange(selected_item?.value)}
-                />
-              )}
-              name="state"
-              control={control}
-            />
+          <HorizontalDivider />
+          <Subtitle>Contact Info</Subtitle>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <Input label="Phone" {...register("phone")} />
+            <Input label="Website" {...register("website")} />
+          </div>
+          <Input label="Email" {...register("email")} type="email" />
+          <HorizontalDivider />
+          <div className="ml-auto w-full md:w-1/2 lg:w-1/3">
+            <Button isLoading={isMutating}>Save</Button>
           </div>
         </div>
-        <HorizontalDivider />
-        <Subtitle>Contact Info</Subtitle>
-        <div className="flex flex-col gap-4 md:flex-row">
-          <Input label="Phone" {...register("phone")} />
-          <Input label="Website" {...register("website")} />
-        </div>
-        <Input label="Email" {...register("email")} type="email" />
-        <HorizontalDivider />
-        <div className="ml-auto w-full md:w-1/2 lg:w-1/3">
-          <Button isLoading={isMutating}>Save</Button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </NoSsr>
   );
 };
 

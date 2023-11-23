@@ -1,4 +1,5 @@
 import Badge from "@/components/badge";
+import BusinessForm from "@/components/business/businessForm";
 import { Subtitle, Title } from "@/components/text";
 import { getDateTimeString } from "@/libs/client/datetime";
 import { stringToEditorState } from "@/libs/client/editor";
@@ -16,6 +17,7 @@ const BusinessDetail = ({ business }: BusinessDetailProps) => {
   const hasText = description.getCurrentContent().hasText();
   return (
     <div className="space-y-3">
+      <BusinessForm business={business} />
       <div className="text-sm italic text-gray-500">
         <div>Created At: {getDateTimeString(business.createdAt)}</div>
         <div>Updated At: {getDateTimeString(business.updatedAt)}</div>

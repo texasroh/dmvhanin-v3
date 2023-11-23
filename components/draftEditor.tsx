@@ -21,6 +21,7 @@ interface DraftEditorProps {
   readonly?: boolean;
   onChange?: (state: EditorState) => void;
   emptySwitch?: boolean;
+  value?: EditorState;
 }
 
 const DraftEditor = ({
@@ -28,6 +29,7 @@ const DraftEditor = ({
   onChange,
   readonly,
   emptySwitch,
+  value,
 }: DraftEditorProps) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()

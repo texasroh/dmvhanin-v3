@@ -10,7 +10,7 @@ const Email = () => {
   useEffect(() => {
     signInWithEmail(window.location.href)
       .then((response) => {
-        setUser(response.userInfo);
+        setUser(response!.userInfo);
         router.replace(ROOT_URL);
       })
       .catch(() => router.replace(LOGIN_URL));

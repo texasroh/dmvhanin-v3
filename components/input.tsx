@@ -7,7 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ id, className, label, type = "text", ...props }, ref) => {
+  ({ id, className, label, onChange, onFocus, onBlur, ...props }, ref) => {
     const [inputId, setInputId] = useState(id);
     useEffect(() => {
       if (!id) {
@@ -24,16 +24,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           ref={ref}
           className={clsx(
-            "h-10 w-full rounded border border-gray-400 bg-transparent px-4 outline-orange-300",
-            className
+            className,
+            "h-10 w-full rounded border border-gray-400 bg-transparent px-4 outline-orange-300"
           )}
-          type={type}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
+          onFocus={(e) => {
+            onFocus?.(e);
+            setIsFocus(true);
+          }}
+          onBlur={(e) => {
+            onBlur?.(e);
+            setIsFocus(false);
+          }}
           onChange={(e) => {
-            if (props.onChange) props.onChange(e);
+            onChange?.(e);
             setValue(e.currentTarget.value);
           }}
+          value={value}
         />
         {isFocus || value ? (
           <motion.span
