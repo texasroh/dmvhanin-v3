@@ -13,10 +13,6 @@ import Avatar from "./avatar";
 
 interface SubMenuItemProps extends HTMLAttributes<HTMLDivElement> {}
 
-const SubMenuItem = ({}: SubMenuItemProps) => {
-  return <div></div>;
-};
-
 const ProfileMenu = () => {
   const { user } = useUser();
   return user ? (

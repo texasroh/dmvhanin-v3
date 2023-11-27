@@ -22,4 +22,8 @@ export const userQuery = {
         email,
       },
     }),
+  getCurrentUser: (id: number): User =>
+    client.user.findUnique({
+      where: { id },
+    }),
 };

@@ -14,7 +14,7 @@ const Button = ({
   return (
     <button
       className={clsx(
-        className || "",
+        className,
         "flex w-full items-center justify-center rounded py-2 text-center font-medium text-white",
         isLoading || disabled ? "bg-orange-300" : "bg-orange-500"
       )}
@@ -45,6 +45,6 @@ const WhiteButton = ({
   );
 };
 
-Button.white = WhiteButton;
+Button.White = WhiteButton;
 
 export default Button;

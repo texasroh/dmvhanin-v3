@@ -23,7 +23,7 @@ const Businesses = ({ businesses }: BusinessesProps) => {
 
         <div>
           <Link href={BUSINESS_CREATION_PAGE}>
-            <Button.white className="px-4">+ New</Button.white>
+            <Button.White className="px-4">+ New</Button.White>
           </Link>
         </div>
       </div>
