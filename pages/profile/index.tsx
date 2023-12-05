@@ -1,12 +1,16 @@
 import Avatar from "@/components/avatar";
 import Button from "@/components/button";
 import Input from "@/components/input";
+import LoadingSpinner from "@/components/loadingSpinner";
 import { ROOT_URL } from "@/constants/urls";
+import { profileAPI } from "@/libs/client/api/profile";
 import { userQuery } from "@/libs/server/user";
 import { withSsrSession } from "@/libs/server/withSession";
 import { User } from "@prisma/client";
+import { useMutation } from "@tanstack/react-query";
 import { NextPageContext } from "next";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface ProfileFormVariable {
   displayName: string;
@@ -17,13 +21,30 @@ interface ProfileProps {
 }
 
 const Profile = ({ user }: ProfileProps) => {
-  const { register, handleSubmit, reset, setValue } =
-    useForm<ProfileFormVariable>({
-      defaultValues: { displayName: user.displayName },
-    });
+  const defaultValues = { displayName: user.displayName };
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty },
+    reset,
+  } = useForm<ProfileFormVariable>({
+    defaultValues,
+  });
+
+  const { mutate, isLoading: isMutating } = useMutation(
+    profileAPI.patchProfile,
+    {
+      onSuccess: () => {
+        toast.success("Profile Updated!");
+      },
+      onError: () => {},
+    }
+  );
 
   const onSubmit = (data: ProfileFormVariable) => {
-    console.log(data);
+    mutate(data, {
+      onSuccess: () => reset(data),
+    });
   };
 
   return (
@@ -38,10 +59,19 @@ const Profile = ({ user }: ProfileProps) => {
         <div>{user?.displayName}</div>
         <form className="flex space-x-2" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-full md:w-1/2">
-            <Input label="Display Name" {...register("displayName")} />
+            <Input
+              label="Display Name"
+              {...register("displayName")}
+              value={defaultValues.displayName}
+            />
           </div>
           <div>
-            <Button.White className="border-0 px-4">Save</Button.White>
+            <Button.White
+              className="border-0 px-4"
+              disabled={isMutating || !isDirty}
+            >
+              {isMutating ? <LoadingSpinner /> : "Save"}
+            </Button.White>
           </div>
         </form>
         <div>{user?.email}</div>
@@ -63,7 +93,6 @@ export const getServerSideProps = withSsrSession(
         },
       };
     const user = await userQuery.getCurrentUser(userId);
-    console.log(user);
     return {
       props: { user: JSON.parse(JSON.stringify(user)) },
     };

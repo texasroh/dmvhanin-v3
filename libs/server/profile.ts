@@ -10,4 +10,6 @@ export const profileQuery = {
         },
       },
     }),
+  patchProfile: (id: number, data: any) =>
+    client.user.update({ where: { id }, data }),
 };

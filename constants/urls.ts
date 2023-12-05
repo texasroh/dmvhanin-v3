@@ -21,6 +21,12 @@ export const GET_CATEGORIES = BASE_API_URL + "/businesses/category";
 export const GET_SUBCATEGORIES = GET_CATEGORIES + "?sub=true";
 
 /**
+ * Profile related URL
+ */
+
+export const PROFILE_API = BASE_API_URL + "/profile";
+
+/**
  * Page URLs
  */
 
