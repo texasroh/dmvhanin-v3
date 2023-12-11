@@ -12,17 +12,19 @@ datasource db {
 }
 
 model User {
-  id              Int              @id @default(autoincrement())
-  createdAt       DateTime         @default(now()) @db.Timestamptz(3)
-  updatedAt       DateTime         @updatedAt @db.Timestamptz(3)
-  lastLogin       DateTime         @default(now()) @db.Timestamptz(3)
-  uid             String           @unique @db.VarChar(50)
-  displayName     String           @db.VarChar(50)
-  photoURL        String           @db.VarChar(250)
-  email           String           @db.VarChar(50)
-  businessOwner   Boolean          @default(false) @db.Boolean
+  id              Int                @id @default(autoincrement())
+  createdAt       DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime           @updatedAt @db.Timestamptz(3)
+  lastLogin       DateTime           @default(now()) @db.Timestamptz(3)
+  uid             String             @unique @db.VarChar(50)
+  displayName     String             @db.VarChar(50)
+  photoURL        String             @db.VarChar(250)
+  email           String             @db.VarChar(50)
+  businessOwner   Boolean            @default(false) @db.Boolean
   businessReviews BusinessReview[]
   businesses      Business[]
+  chatRooms       UsersInChatRooms[]
+  chatMessages    ChatMessage[]
 }
 
 model BusinessCategory {
@@ -94,4 +96,72 @@ model BusinessReview {
   rating     Int
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
+}
+
+model FleaMarketCategory {
+  id        Int                 @id @default(autoincrement())
+  createdAt DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime            @updatedAt @db.Timestamptz(3)
+  name      String              @db.VarChar(100)
+  products  FleaMarketProduct[]
+}
+
+enum FleaMarketStatus {
+  OPEN
+  PENDING
+  SOLD
+  CLOSE
+}
+
+model FleaMarketProduct {
+  id          Int                @id @default(autoincrement())
+  createdAt   DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime           @updatedAt @db.Timestamptz(3)
+  title       String             @db.VarChar(100)
+  category    FleaMarketCategory @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  images      FleaMarketImage[]
+  description Json
+  status      FleaMarketStatus
+  chatRooms   ChatRoom[]
+}
+
+model FleaMarketImage {
+  id        Int               @id @default(autoincrement())
+  createdAt DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime          @updatedAt @db.Timestamptz(3)
+  url       String
+  product   FleaMarketProduct @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model ChatRoom {
+  id                  Int                @id @default(autoincrement())
+  createdAt           DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime           @updatedAt @db.Timestamptz(3)
+  fleaMarketProduct   FleaMarketProduct? @relation(fields: [fleaMarketProductId], references: [id])
+  fleaMarketProductId Int?
+  users               UsersInChatRooms[]
+  messages            ChatMessage[]
+}
+
+model UsersInChatRooms {
+  joinedAt   DateTime @default(now()) @db.Timestamptz(3)
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+
+  @@id([chatRoomId, userId])
+}
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  message    String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
 }

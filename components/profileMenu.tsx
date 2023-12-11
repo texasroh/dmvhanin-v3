@@ -30,35 +30,33 @@ const ProfileMenu = () => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-28 space-y-1 rounded bg-white text-base font-normal shadow">
+          <Menu.Item>
+            {({ active }) => (
+              <Link href={PROFILE_PAGE}>
+                <div
+                  className={clsx("px-4 py-2", {
+                    "bg-orange-300 font-bold text-white": active,
+                  })}
+                >
+                  프로필
+                </div>
+              </Link>
+            )}
+          </Menu.Item>
           {process.env.NODE_ENV === "development" && (
-            <>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link href={PROFILE_PAGE}>
-                    <div
-                      className={clsx("px-4 py-2", {
-                        "bg-orange-300 font-bold text-white": active,
-                      })}
-                    >
-                      프로필
-                    </div>
-                  </Link>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <Link href={BUSINESS_OWNER_PAGE}>
-                    <div
-                      className={clsx("px-4 py-2", {
-                        "bg-orange-300 font-bold text-white": active,
-                      })}
-                    >
-                      비지니스
-                    </div>
-                  </Link>
-                )}
-              </Menu.Item>
-            </>
+            <Menu.Item>
+              {({ active }) => (
+                <Link href={BUSINESS_OWNER_PAGE}>
+                  <div
+                    className={clsx("px-4 py-2", {
+                      "bg-orange-300 font-bold text-white": active,
+                    })}
+                  >
+                    비지니스
+                  </div>
+                </Link>
+              )}
+            </Menu.Item>
           )}
           <Menu.Item>
             {({ active }) => (

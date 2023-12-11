@@ -40,3 +40,4 @@ export const BUSINESS_MAIN_PAGE = "/businesses";
 export const BUSINESS_CATEGORY_PAGE = "/businesses/category/%s";
 export const BUSINESS_DETAIL_PAGE = "/businesses/profile/%s-%s";
 export const BUSINESS_CREATION_PAGE = "/profile/business/new";
+export const FLEAMARKET_MAIN_PAGE = "/fleamarket";
