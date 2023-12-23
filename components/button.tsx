@@ -15,7 +15,7 @@ const Button = ({
     <button
       className={clsx(
         className,
-        "flex w-full items-center justify-center rounded py-2 text-center font-medium text-white",
+        "flex w-full items-center justify-center rounded px-7 py-1 text-center font-medium text-white",
         isLoading || disabled ? "bg-orange-300" : "bg-orange-500"
       )}
       disabled={isLoading || disabled}

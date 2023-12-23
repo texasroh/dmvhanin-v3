@@ -8,7 +8,7 @@ import { userQuery } from "@/libs/server/user";
 import { withSsrSession } from "@/libs/server/withSession";
 import { User } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext } from "next";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -84,7 +84,7 @@ const Profile = ({ user }: ProfileProps) => {
 export default Profile;
 
 export const getServerSideProps = withSsrSession(
-  async ({ req }: NextPageContext) => {
+  async ({ req }: GetServerSidePropsContext) => {
     const userId = req?.session.user?.id;
     if (!userId)
       return {

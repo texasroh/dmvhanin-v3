@@ -9,7 +9,7 @@ import { formatPhone } from "@/libs/client/number";
 import { ExtendedBusinessReview, businessQuery } from "@/libs/server/business";
 import { Business, BusinessImage, BusinessSubcategory } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
@@ -143,7 +143,7 @@ export default BusinessDetail;
 
 export const getServerSideProps = async ({
   query: { businessToken },
-}: NextPageContext) => {
+}: GetServerSidePropsContext) => {
   const uuid = businessToken?.toString().split("-").pop() + "";
   const business = await businessQuery.getBusiness(uuid);
 

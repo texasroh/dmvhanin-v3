@@ -27,6 +27,12 @@ export const GET_SUBCATEGORIES = GET_CATEGORIES + "?sub=true";
 export const PROFILE_API = BASE_API_URL + "/profile";
 
 /**
+ * FleaMarket API URLs
+ */
+
+export const FLEAMARKET_API = BASE_API_URL + "/fleamarket";
+
+/**
  * Page URLs
  */
 
@@ -36,6 +42,9 @@ export const LOGOUT_PAGE = "/auth/logout";
 export const PROFILE_PAGE = "/profile";
 export const BUSINESS_OWNER_PAGE = "/profile/business";
 export const BUSINESS_OWNER_DETAIL_PAGE = "/profile/business/%s";
+export const MY_PRODUCTS_PAGE = "/profile/products";
+export const MY_PRODUCT_UPLOAD_PAGE = "/profile/products/upload";
+export const MY_PRODUCT_PAGE = "/profile/products/%s";
 export const BUSINESS_MAIN_PAGE = "/businesses";
 export const BUSINESS_CATEGORY_PAGE = "/businesses/category/%s";
 export const BUSINESS_DETAIL_PAGE = "/businesses/profile/%s-%s";

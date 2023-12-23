@@ -6,7 +6,7 @@ import { stringToEditorState } from "@/libs/client/editor";
 import { GetDetailBusiness, businessQuery } from "@/libs/server/business";
 import { withSsrSession } from "@/libs/server/withSession";
 import { Editor } from "draft-js";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext } from "next";
 
 interface BusinessDetailProps {
   business: GetDetailBusiness;
@@ -53,7 +53,7 @@ const BusinessDetail = ({ business }: BusinessDetailProps) => {
 export default BusinessDetail;
 
 export const getServerSideProps = withSsrSession(
-  async ({ req, query: { uuid } }: NextPageContext) => {
+  async ({ req, query: { uuid } }: GetServerSidePropsContext) => {
     const uid = req?.session.user?.uid;
     const business = await businessQuery.getBusiness(uuid + "");
 

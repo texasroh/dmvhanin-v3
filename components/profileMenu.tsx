@@ -2,6 +2,7 @@ import {
   BUSINESS_OWNER_PAGE,
   LOGIN_PAGE,
   LOGOUT_PAGE,
+  MY_PRODUCTS_PAGE,
   PROFILE_PAGE,
 } from "@/constants/urls";
 import { useUser } from "@/hooks/useUser";
@@ -53,6 +54,21 @@ const ProfileMenu = () => {
                     })}
                   >
                     비지니스
+                  </div>
+                </Link>
+              )}
+            </Menu.Item>
+          )}
+          {process.env.NODE_ENV === "development" && (
+            <Menu.Item>
+              {({ active }) => (
+                <Link href={MY_PRODUCTS_PAGE}>
+                  <div
+                    className={clsx("px-4 py-2", {
+                      "bg-orange-300 font-bold text-white": active,
+                    })}
+                  >
+                    내 물건
                   </div>
                 </Link>
               )}

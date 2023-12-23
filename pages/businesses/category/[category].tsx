@@ -6,7 +6,7 @@ import { businessAPI } from "@/libs/client/api/business";
 import { businessQuery } from "@/libs/server/business";
 import { Business, BusinessSubcategory } from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -136,7 +136,7 @@ export default CategoryIndex;
 
 export const getServerSideProps = async ({
   query: { category },
-}: NextPageContext) => {
+}: GetServerSidePropsContext) => {
   const businesses = await businessQuery.getBusinesses(category + "", 1);
 
   const totalResult = await businessQuery.getTotalBusinessCount(category + "");

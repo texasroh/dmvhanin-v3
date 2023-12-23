@@ -12,19 +12,20 @@ datasource db {
 }
 
 model User {
-  id              Int                @id @default(autoincrement())
-  createdAt       DateTime           @default(now()) @db.Timestamptz(3)
-  updatedAt       DateTime           @updatedAt @db.Timestamptz(3)
-  lastLogin       DateTime           @default(now()) @db.Timestamptz(3)
-  uid             String             @unique @db.VarChar(50)
-  displayName     String             @db.VarChar(50)
-  photoURL        String             @db.VarChar(250)
-  email           String             @db.VarChar(50)
-  businessOwner   Boolean            @default(false) @db.Boolean
-  businessReviews BusinessReview[]
-  businesses      Business[]
-  chatRooms       UsersInChatRooms[]
-  chatMessages    ChatMessage[]
+  id                 Int                 @id @default(autoincrement())
+  createdAt          DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime            @updatedAt @db.Timestamptz(3)
+  lastLogin          DateTime            @default(now()) @db.Timestamptz(3)
+  uid                String              @unique @db.VarChar(50)
+  displayName        String              @db.VarChar(50)
+  photoURL           String              @db.VarChar(250)
+  email              String              @db.VarChar(50)
+  businessOwner      Boolean             @default(false) @db.Boolean
+  businessReviews    BusinessReview[]
+  businesses         Business[]
+  chatRooms          UsersInChatRooms[]
+  chatMessages       ChatMessage[]
+  fleaMarketProducts FleaMarketProduct[]
 }
 
 model BusinessCategory {
@@ -117,6 +118,7 @@ model FleaMarketProduct {
   id          Int                @id @default(autoincrement())
   createdAt   DateTime           @default(now()) @db.Timestamptz(3)
   updatedAt   DateTime           @updatedAt @db.Timestamptz(3)
+  uuid        String             @unique @db.VarChar(32)
   title       String             @db.VarChar(100)
   category    FleaMarketCategory @relation(fields: [categoryId], references: [id])
   categoryId  Int
@@ -124,6 +126,8 @@ model FleaMarketProduct {
   description Json
   status      FleaMarketStatus
   chatRooms   ChatRoom[]
+  seller      User               @relation(fields: [userId], references: [id])
+  userId      Int
 }
 
 model FleaMarketImage {
@@ -133,6 +137,7 @@ model FleaMarketImage {
   url       String
   product   FleaMarketProduct @relation(fields: [productId], references: [id])
   productId Int
+  sort      Int
 }
 
 model ChatRoom {

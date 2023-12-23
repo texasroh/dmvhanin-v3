@@ -7,7 +7,7 @@ import {
 import { profileQuery } from "@/libs/server/profile";
 import { withSsrSession } from "@/libs/server/withSession";
 import { Business } from "@prisma/client";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { sprintf } from "sprintf-js";
 
@@ -46,7 +46,7 @@ const Businesses = ({ businesses }: BusinessesProps) => {
 export default Businesses;
 
 export const getServerSideProps = withSsrSession(
-  async ({ req }: NextPageContext) => {
+  async ({ req }: GetServerSidePropsContext) => {
     const uid = req?.session.user?.uid;
     if (!uid) {
       return {
