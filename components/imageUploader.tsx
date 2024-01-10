@@ -10,7 +10,7 @@ import {
 import NoSsr from "./noSsr";
 
 interface ImageItem {
-  id?: number;
+  id: number | string;
   sort: number;
   url?: string;
   file?: File;
@@ -45,7 +45,7 @@ const ImagePreview = memo(({ file }: ImagePreviewProps) => {
 
   return (
     <img
-      className="h-24 w-24 rounded object-contain shadow shadow-gray-300"
+      className="aspect-square w-24 rounded object-contain shadow shadow-gray-300"
       src={preview}
     />
   );
@@ -70,10 +70,10 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
   const onChangeFile = (newfiles: FileList) => {
     if (!newfiles) return;
     if (files.length >= 5) return;
-    const fileArray = Array.from(newfiles);
-    const newFileArray = fileArray.map((file) => ({
-      id: files.length + 1,
-      sort: 1,
+    const fileArray = Array.from(newfiles).slice(0, 5 - files.length);
+    const newFileArray = fileArray.map((file, idx) => ({
+      id: "new_" + files.length + idx + 1,
+      sort: files.length + idx + 1,
       file,
     }));
     setFiles((prev) => [...prev, ...newFileArray]);
@@ -84,7 +84,7 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
   }, [files]);
 
   const onDragEnd = (result: DropResult) => {
-    console.log("result.source.droppableId", result.source.droppableId);
+    console.log("result", result);
   };
 
   const onDrop = (e: DragEvent) => {
@@ -94,7 +94,6 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
       e.dataTransfer.clearData();
     }
   };
-  console.log(files);
 
   if (!enabled) return null;
 
@@ -118,13 +117,13 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
           multiple
         />
         {files.length > 0 ? (
-          <DragDropContext onDragEnd={console.log}>
-            <Droppable droppableId="images">
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="images" direction="horizontal">
               {(provided, snapshot) => (
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="flex flex-wrap gap-3"
+                  className="flex gap-4 overflow-x-scroll"
                 >
                   {files.map((file, idx) => (
                     <Draggable
@@ -137,13 +136,14 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          className="shrink-0"
                         >
                           <ImagePreview file={file} />
                         </div>
                       )}
                     </Draggable>
                   ))}
-                  {/* {provided.placeholder} */}
+                  {provided.placeholder}
                   {files.length < 5 && (
                     <label
                       className="flex h-24 w-24 cursor-pointer items-center justify-center rounded object-contain shadow shadow-gray-300"

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   env: {
     NEXT_PUBLIC_PUBLIC_URL: process.env.PUBLIC_URL,
     DATABASE_URL: process.env.DATABASE_URL,
