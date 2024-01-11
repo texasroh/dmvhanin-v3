@@ -1,5 +1,5 @@
 import Button from "@/components/button";
-import ImageUploader from "@/components/imageUploader";
+import ImageUploader, { ImageItem } from "@/components/imageUploader";
 import Input from "@/components/input";
 import Textarea from "@/components/textarea";
 import { fleamarketAPI } from "@/libs/client/api/fleamarket";
@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 interface ProductUploadVariable {
   title: string;
   description: string;
-  images: File[];
+  images: ImageItem[];
   category: number;
 }
 
@@ -22,13 +22,14 @@ interface UploadProps {
 
 const Upload = ({ categories }: UploadProps) => {
   const [images, setImages] = useState(null);
-  const { register, handleSubmit } = useForm<ProductUploadVariable>();
+  const { register, handleSubmit, setValue } = useForm<ProductUploadVariable>();
   const { mutate } = useMutation(fleamarketAPI.postProduct, {
     onSuccess: () => {},
   });
 
   const onSubmit = (data: ProductUploadVariable) => {
-    mutate(data);
+    // mutate(data);
+    console.log(data);
   };
   return (
     <div>
@@ -36,7 +37,9 @@ const Upload = ({ categories }: UploadProps) => {
       <div className="mt-4">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <ImageUploader />
+            <ImageUploader
+              onFileChange={(files) => setValue("images", files)}
+            />
             <Input
               label="Title"
               {...register("title", { required: true })}

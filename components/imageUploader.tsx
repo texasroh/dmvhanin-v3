@@ -9,7 +9,7 @@ import {
 } from "react-beautiful-dnd";
 import NoSsr from "./noSsr";
 
-interface ImageItem {
+export interface ImageItem {
   id: number | string;
   sort: number;
   url?: string;
@@ -52,7 +52,7 @@ const ImagePreview = memo(({ file }: ImagePreviewProps) => {
 });
 
 interface ImageUploaderProps extends HTMLAttributes<HTMLInputElement> {
-  onFileChange?: (files: File[]) => void;
+  onFileChange?: (files: ImageItem[]) => void;
 }
 
 const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
@@ -72,7 +72,7 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
     if (files.length >= 5) return;
     const fileArray = Array.from(newfiles).slice(0, 5 - files.length);
     const newFileArray = fileArray.map((file, idx) => ({
-      id: "new_" + files.length + idx + 1,
+      id: "new_" + (files.length + idx + 1),
       sort: files.length + idx + 1,
       file,
     }));
@@ -80,11 +80,30 @@ const ImageUploader = ({ onFileChange }: ImageUploaderProps) => {
   };
 
   useEffect(() => {
-    // onFileChange?.(files);
+    onFileChange?.(files);
   }, [files]);
 
   const onDragEnd = (result: DropResult) => {
-    console.log("result", result);
+    const { source, destination } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newFiles = [...files];
+
+    const [reorderedItem] = newFiles.splice(source.index, 1);
+
+    newFiles.splice(destination.index, 0, reorderedItem);
+
+    setFiles(newFiles.map((file, idx) => ({ ...file, sort: idx + 1 })));
   };
 
   const onDrop = (e: DragEvent) => {
